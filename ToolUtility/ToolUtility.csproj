@@ -89,10 +89,6 @@
       <Project>{21acf7ad-d0cd-4303-90e0-f01cbd832f71}</Project>
       <Name>Line.Messaging</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LinePayCSharp\LinePayCSharp.csproj">
-      <Project>{f82a99e4-357d-4be5-a140-40a32edda58a}</Project>
-      <Name>LinePayCSharp</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

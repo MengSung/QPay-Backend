@@ -1,14 +1,7 @@
-﻿using Line.Messaging;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Xrm.Sdk;
-using QPay.Domain;
-using System;
-using System.Threading.Tasks;
-using ToolUtilityNameSpace;
-using System.Web;
+﻿using Microsoft.AspNetCore.Mvc;
 using QPayBackend.Models;
-using System.Collections.Generic;
 using QPayBackend.Tools;
+using System.Threading.Tasks;
 
 namespace QPayBackend.Controllers
 {
@@ -23,7 +16,7 @@ namespace QPayBackend.Controllers
         [Route("QPayBackendUrl")]
         public async Task<IActionResult> QPayReturnUrl(int? id = 0)
         {
-            return new OkObjectResult("付款結果可能成功");
+            return new OkObjectResult("這是永豐金流後台!");
         }
 
         [HttpPost]
