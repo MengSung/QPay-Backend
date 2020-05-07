@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <Authors>pierre3, kenamanu</Authors>
+    <Company></Company>
+    <Product>Line Messaging API</Product>
+    <Description>SDK for the LINE Messaging API for C#</Description>
+    <Version>1.4.3</Version>
+    <Copyright>© 2018 pierre3</Copyright>
+    <PackageLicenseUrl>https://github.com/pierre3/LineMessagingApi/blob/master/LICENSE</PackageLicenseUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>Line Messaging API;line;bot</PackageTags>
+    <PackageProjectUrl>https://github.com/pierre3/LineMessagingApi/</PackageProjectUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <RepositoryUrl>https://github.com/pierre3/LineMessagingApi/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>Added new webhook events
+
+- Member join event
+- Member leave event
+- Device link event
+- Device unlink event</PackageReleaseNotes>
+    <AssemblyVersion>1.4.3.0</AssemblyVersion>
+    <FileVersion>1.4.3.0</FileVersion>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>SpeechMessageCrmKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.3\Line.Messaging.xml</DocumentationFile>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+</Project>
