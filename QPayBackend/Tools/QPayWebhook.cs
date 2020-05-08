@@ -13,31 +13,18 @@ namespace QPayBackend.Tools
 
     public class QPayAtmWebhook : Controller
     {
-        private LineMessagingClient m_LineMessagingClient { get; }
+        private LineMessagingClient m_LineMessagingClient { get; set; }
 
-        private PushUtility m_PushUtility { get; }
+        private PushUtility m_PushUtility { get; set; }
 
-        private ReplyUtility m_ReplyUtility { get; }
+        private QPayProcessor m_QPayProcessor { get; set; }
 
-        private QPayProcessor m_QPayProcessor { get; }
-
-        ToolUtilityClass m_ToolUtilityClass;
-
-        // 客製化
-        // 永和禮拜堂 2.0
-        private const String SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN = @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
+        private ToolUtilityClass m_ToolUtilityClass { get; set; }
 
         public QPayAtmWebhook()
         {
-            this.m_LineMessagingClient = new LineMessagingClient(SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN);
+            m_QPayProcessor = new QPayProcessor();
 
-            //// 客製化
-            m_PushUtility = new PushUtility(m_LineMessagingClient);
-            m_ReplyUtility = new ReplyUtility(m_LineMessagingClient);
-
-            m_QPayProcessor = new QPayProcessor(m_LineMessagingClient, m_PushUtility, m_ReplyUtility);
-
-            m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365");
         }
 
         #region 釋放記憶體
@@ -73,13 +60,16 @@ namespace QPayBackend.Tools
 
         public JsonResult QPayBackendUrl([FromBody] BackendPostData aBackendPostData)
         {
-            //string ShopNo = aBackendPostData.ShopNo;
-            //string PayToken = aBackendPostData.PayToken;
+
+            m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", ConvertShopNoToOrganization(aBackendPostData.ShopNo) );
+            this.m_LineMessagingClient = new LineMessagingClient(ConvertShopNoToOrganization(aBackendPostData.ShopNo));
+            m_PushUtility = new PushUtility(m_LineMessagingClient);
 
             QryOrderPay aQryOrderPay = new QryOrderPay();
 
             aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.PayToken);
 
+            #region// 取得收費單
             EntityCollection FeeEntityCollection = m_ToolUtilityClass.RetrieveFeeByFetchXmlOrderNumber(aQryOrderPay.TSResultContent.OrderNo);
             Entity aFeeEntity;
             if (FeeEntityCollection.Entities.Count == 1)
@@ -101,7 +91,7 @@ namespace QPayBackend.Tools
                     { "Status", "S" }
                 });
             }
-
+            #endregion
             // 取得付款人
             Entity aContact = this.m_ToolUtilityClass.RetrieveEntity("contact", this.m_ToolUtilityClass.GetEntityLookupAttribute(aFeeEntity, "new_contact_new_fee"));
             // 取得付款人姓名
@@ -109,8 +99,7 @@ namespace QPayBackend.Tools
             // 取得付款人 Line Id
             String UserLineId = this.m_ToolUtilityClass.GetEntityStringAttribute(aContact, "new_lineid");
 
-
-            // 收費單描述說明
+            #region// 收費單描述說明
             String FeeDescription = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aFeeEntity, "new_description");
             String Description = "";
             if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("C"))
@@ -131,7 +120,7 @@ namespace QPayBackend.Tools
                        "說明     : " + FeeDescription + aQryOrderPay.Description + Environment.NewLine +
                        "--------------------" + Environment.NewLine;
             }
-
+            #endregion
             if (aQryOrderPay.Status == "S")
             {
                 if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("C"))
@@ -184,6 +173,28 @@ namespace QPayBackend.Tools
                 { "Status", "S" }
             });
         }
+
+        private string ConvertShopNoToOrganization( String ShopNo )
+        {
+            switch (ShopNo)
+            {
+                case "NA0149_001":
+                    return "yhchurchback";
+                default:
+                    return null;
+            }
+        }
+        private string ConvertShopNoToChannelAccessToken(String ShopNo)
+        {
+            switch (ShopNo)
+            {
+                case "NA0149_001":
+                    return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
+                default:
+                    return null;
+            }
+        }
+
     }
 
 }

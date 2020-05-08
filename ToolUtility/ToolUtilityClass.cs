@@ -50,7 +50,7 @@ namespace ToolUtilityNameSpace
         #region 永和禮拜堂(公司發展)
         private const String SERVER = "speechmessage.com.tw";
         private const String PORT = "7777";
-        private const String ORGANIZATION = "yhchurchback";
+        //private const String ORGANIZATION = "yhchurchback";
         private const String USERNAME = "Administrator@speechmessage.com.tw";
         private const String PASSWORD = "hu9840";
         private const String DOMAIN = "SPEECHMESSAGE";
@@ -69,7 +69,6 @@ namespace ToolUtilityNameSpace
         #endregion
 
         #endregion Class Level Members
-
         #region 有效截止日期
         private DateTime ExpireDate = new DateTime(2013, 3, 30);
         //private DateTime ExpireDate = new DateTime( 2012, 1, 28 );
@@ -102,7 +101,7 @@ namespace ToolUtilityNameSpace
         #endregion
         #endregion
         #region 建構式
-        public ToolUtilityClass()
+        public ToolUtilityClass( )
         {
             //SetOrganizationService();
 
@@ -110,7 +109,7 @@ namespace ToolUtilityNameSpace
 
             //SetFederatedOrganizationProxy();
         }
-        public ToolUtilityClass(String DiscoveryServiceType)
+        public ToolUtilityClass(String DiscoveryServiceType, String aOrganization )
         {
             //SetOrganizationService();
 
@@ -121,11 +120,11 @@ namespace ToolUtilityNameSpace
 
             if (DiscoveryServiceType == "DYNAMICS365")
             {
-                SetFederatedOrganizationProxy(DiscoveryServiceType);
+                SetFederatedOrganizationProxy(DiscoveryServiceType, aOrganization);
             }
             else
             {
-                SetOrganizationService();
+                SetOrganizationService(aOrganization);
             }
 
             CRM_TYPE = DiscoveryServiceType;
@@ -211,11 +210,11 @@ namespace ToolUtilityNameSpace
 
             return loClientCredentials;
         }
-        public IOrganizationService SetOrganizationService()
+        public IOrganizationService SetOrganizationService( String aOrganization )
         {
             OrganizationServiceProxy loServiceProxy;
 
-            Uri loURL = new Uri("http://" + SERVER + ":" + PORT + "/" + ORGANIZATION + "/XRMServices/2011/Organization.svc");
+            Uri loURL = new Uri("http://" + SERVER + ":" + PORT + "/" + aOrganization + "/XRMServices/2011/Organization.svc");
             //Uri loURL = new Uri(http://win2008r2:6666/lkllc/XRMServices/2011/Organization.svc");
 
             // http://win2008r2:6666/lkllc/XRMServices/2011/Organization.svc
@@ -232,71 +231,18 @@ namespace ToolUtilityNameSpace
 
             return m_OrganizationService;
         }
-        public IOrganizationService SetClaimsBasedAuthenticationOrganizationService()
-        {
-            OrganizationServiceProxy loServiceProxy;
-
-            Uri loURL = new Uri("https://" + ORGANIZATION + "." + SERVER + "/XRMServices/2011/Organization.svc");
-            //Uri loURL = new Uri(https://speechmessage.speechmessage.com.tw/XRMServices/2011/Organization.svc");
-
-            IServiceConfiguration<IOrganizationService> loOrgConfigInfo = ServiceConfigurationFactory.CreateConfiguration<IOrganizationService>(loURL);
-            var loCreds = GetClientCredentials();
-
-            // Get a reference to the organization service.
-            using (loServiceProxy = new OrganizationServiceProxy(loOrgConfigInfo, loCreds))
-            {
-                // This statement is required to enable early-bound type support.
-                loServiceProxy.ServiceConfiguration.CurrentServiceEndpoint.Behaviors.Add(new ProxyTypesBehavior());
-
-                m_Crm2011OrganizationService = (IOrganizationService)loServiceProxy;
-            }
-
-            return m_OrganizationService;
-        }
-        public String SetClaimsBasedAuthenticationOrganizationService_DEBUG()
-        {
-            String DebugStriing = "";
-
-            OrganizationServiceProxy loServiceProxy;
-
-            Uri loURL = new Uri("https://" + ORGANIZATION + "." + SERVER + "/XRMServices/2011/Organization.svc");
-            //Uri loURL = new Uri(https://speechmessage.speechmessage.com.tw/XRMServices/2011/Organization.svc");
-
-            DebugStriing += "001" + Environment.NewLine;
-
-            IServiceConfiguration<IOrganizationService> loOrgConfigInfo = ServiceConfigurationFactory.CreateConfiguration<IOrganizationService>(loURL);
-            DebugStriing += "002" + Environment.NewLine;
-
-            var loCreds = GetClientCredentials();
-
-            DebugStriing += "003" + Environment.NewLine;
-            //// Get a reference to the organization service.
-            using (loServiceProxy = new OrganizationServiceProxy(loOrgConfigInfo, loCreds))
-            {
-                //    // This statement is required to enable early-bound type support.
-                //    loServiceProxy.ServiceConfiguration.CurrentServiceEndpoint.Behaviors.Add(new ProxyTypesBehavior());
-                //
-                m_Crm2011OrganizationService = (IOrganizationService)loServiceProxy;
-                DebugStriing += "004" + Environment.NewLine;
-            }
-
-            DebugStriing += "005" + Environment.NewLine;
-
-            //return m_OrganizationService;
-            return DebugStriing;
-        }
         #endregion
         #region 連接 Dynamics 365 服務
-        public OrganizationServiceProxy SetFederatedOrganizationProxy(String DiscoveryServiceType)
+        public OrganizationServiceProxy SetFederatedOrganizationProxy(String DiscoveryServiceType, String aOrganization)
         {
             String aDiscoveryServiceAddress = "";
             if (DiscoveryServiceType == "DYNAMICS365")
             {
-                aDiscoveryServiceAddress = "https://" + ORGANIZATION + "." + SERVER + BASE_DISCOVERY_SERVICE_ADDRESS;
+                aDiscoveryServiceAddress = "https://" + aOrganization + "." + SERVER + BASE_DISCOVERY_SERVICE_ADDRESS;
             }
             else
             {
-                aDiscoveryServiceAddress = "http://" + SERVER + ":" + PORT + "/" + ORGANIZATION + "/XRMServices/2011/Organization.svc";
+                aDiscoveryServiceAddress = "http://" + SERVER + ":" + PORT + "/" + aOrganization + "/XRMServices/2011/Organization.svc";
             }
 
             IServiceManagement<IDiscoveryService> serviceManagement = ServiceConfigurationFactory.CreateManagement<IDiscoveryService>(new Uri(aDiscoveryServiceAddress));
@@ -317,7 +263,7 @@ namespace ToolUtilityNameSpace
                     // Obtain information about the organizations that the system user belongs to.
                     OrganizationDetailCollection orgs = DiscoverOrganizations(discoveryProxy);
                     // Obtains the Web address (Uri) of the target organization.
-                    organizationUri = FindOrganization(ORGANIZATION, orgs.ToArray()).Endpoints[EndpointType.OrganizationService];
+                    organizationUri = FindOrganization(aOrganization, orgs.ToArray()).Endpoints[EndpointType.OrganizationService];
                 }
             }
 

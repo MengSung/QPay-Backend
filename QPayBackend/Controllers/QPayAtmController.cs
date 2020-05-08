@@ -27,8 +27,6 @@ namespace QPayBackend.Controllers
             {
                 return aQPayAtmWebhook.QPayBackendUrl(aBackendPostData);
             }
-            //QPayAtmWebhook aQPayAtmWebhook = new QPayAtmWebhook();
-            //return aQPayAtmWebhook.QPayBackendUrl(aBackendPostData);
         }
     }
 }
