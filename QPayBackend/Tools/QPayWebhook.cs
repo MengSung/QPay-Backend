@@ -65,11 +65,12 @@ namespace QPayBackend.Tools
         {
             try
             {
-                m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", ConvertShopNoToOrganization(aBackendPostData.ShopNo) );
                 this.m_LineMessagingClient = new LineMessagingClient(ConvertShopNoToChannelAccessToken(aBackendPostData.ShopNo));
                 m_PushUtility = new PushUtility(m_LineMessagingClient);
 
                 this.m_PushUtility.SendMessage("U7638e4ed509708a3573ba6d69970583d", "呼叫ATM轉帳");
+
+                m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", ConvertShopNoToOrganization(aBackendPostData.ShopNo));
 
                 QryOrderPay aQryOrderPay = new QryOrderPay();
 
