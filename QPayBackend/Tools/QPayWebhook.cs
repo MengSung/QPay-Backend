@@ -99,8 +99,12 @@ namespace QPayBackend.Tools
                 else 
                 {
                     // 收費單付款狀態
-                    if (this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status") == 100000001) // 100000001 = 信用卡已繳費
+                    // 信用卡已繳費 100000001
+                    // ATM轉帳/匯款已繳費 100000002
+                    int PayStatus = this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status");
+                    if (PayStatus == 100000001 || PayStatus == 100000002 ) 
                     {
+                        // 已付款過了
                         return Json(new Dictionary<string, string>() { { "Status", "S" } });
                     }
                 }
