@@ -75,11 +75,7 @@ namespace QPayBackend.Tools
 
                     this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "ShopNo值為NULL");
 
-                    return Json(new Dictionary<string, string>()
-                        {
-                            { "Status", "S" }
-                        });
-
+                    return Json(new Dictionary<string, string>() { { "Status", "S" } });
                 }
                 m_PushUtility = new PushUtility(m_LineMessagingClient);
 
@@ -94,30 +90,19 @@ namespace QPayBackend.Tools
                 aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.PayToken);
 
                 #region// 取得收費單
-                EntityCollection FeeEntityCollection = m_ToolUtilityClass.RetrieveFeeByFetchXmlOrderNumber(aQryOrderPay.TSResultContent.OrderNo);
-                Entity aFeeEntity;
-                if (FeeEntityCollection.Entities.Count == 1)
-                {
-                    //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "有找到收費單");
 
-                    aFeeEntity = this.m_ToolUtilityClass.RetrieveEntity("new_fee", FeeEntityCollection.Entities[0].Id);
+                Entity aFeeEntity = this.m_ToolUtilityClass.RetrieveEntity("new_fee", new Guid(aQryOrderPay.TSResultContent.Param1));
+                if (aFeeEntity == null)
+                {
+                    return Json(new Dictionary<string, string>() { { "Status", "S" } });
+                }
+                else 
+                {
                     // 收費單付款狀態
                     if (this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status") == 100000001) // 100000001 = 信用卡已繳費
                     {
-                        return Json(new Dictionary<string, string>()
-                        {
-                            { "Status", "S" }
-                        });
+                        return Json(new Dictionary<string, string>() { { "Status", "S" } });
                     }
-                }
-                else
-                {
-                    //this.m_PushUtility.SendMessage( MENGSUNG_LINE_ID, "呼叫ATM轉帳-沒找到收費單");
-
-                    return Json(new Dictionary<string, string>()
-                    {
-                        { "Status", "S" }
-                    });
                 }
                 #endregion
                 // 取得付款人
@@ -196,10 +181,7 @@ namespace QPayBackend.Tools
                 {
                 }
 
-                return Json(new Dictionary<string, string>()
-                {
-                    { "Status", "S" }
-                });
+                return Json(new Dictionary<string, string>() { { "Status", "S" } });
             }
             catch (System.Exception e)
             {
