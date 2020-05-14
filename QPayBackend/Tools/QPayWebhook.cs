@@ -144,10 +144,16 @@ namespace QPayBackend.Tools
                         this.m_ToolUtilityClass.SetEntityMoneyAttribute(ref aFeeEntity, "new_fee_really_paid", new Money((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100));
                         // 收費單付款方式
                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_way", 100000001); // 100000001 = 信用卡
-                                                                                                                 // 收費單付款狀態
+                        // 收費單付款狀態
                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_status", 100000001); // 100000001 = 信用卡已繳費
-                                                                                                                    // 收費單說明
+                        // 收費單說明
                         this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", Description);
+
+                        if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("C"))
+                        {
+                            // 已付款信用卡訂單編號
+                            this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_q_paid_card_order_no", aQryOrderPay.TSResultContent.OrderNo);
+                        }
 
                         // 更新收費單
                         this.m_ToolUtilityClass.UpdateEntity(ref aFeeEntity);
