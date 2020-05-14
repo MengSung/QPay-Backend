@@ -90,7 +90,6 @@ namespace QPayBackend.Tools
                 aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.PayToken);
 
                 #region// 取得收費單
-
                 Entity aFeeEntity = this.m_ToolUtilityClass.RetrieveEntity("new_fee", new Guid(aQryOrderPay.TSResultContent.Param1));
                 if (aFeeEntity == null)
                 {
@@ -102,10 +101,11 @@ namespace QPayBackend.Tools
                     // 信用卡已繳費 100000001
                     // ATM轉帳/匯款已繳費 100000002
                     int PayStatus = this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status");
-                    if (PayStatus == 100000001 || PayStatus == 100000002 ) 
+                    //if (PayStatus == 100000001 || PayStatus == 100000002)
+                    if ( PayStatus == 100000001 )
                     {
-                        // 已付款過了
-                        return Json(new Dictionary<string, string>() { { "Status", "S" } });
+                            // 已付款過了
+                            return Json(new Dictionary<string, string>() { { "Status", "S" } });
                     }
                 }
                 #endregion
@@ -123,6 +123,7 @@ namespace QPayBackend.Tools
                 {
                     Description = "姓名     : " + aFullName + Environment.NewLine +
                            "日期     : " + DateTime.Now.ToLocalTime().ToString() + Environment.NewLine +
+                           "訂單編號 : " + aQryOrderPay.TSResultContent.OrderNo + Environment.NewLine +
                            "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + Environment.NewLine +
                            "付款方式 : " + "信用卡" + Environment.NewLine +
                            "說明     : " + FeeDescription + aQryOrderPay.Description + Environment.NewLine +
@@ -130,7 +131,9 @@ namespace QPayBackend.Tools
                 }
                 else
                 {
-                    Description = "姓名     : " + aFullName + Environment.NewLine +
+                    Description = 
+                           "姓名     : " + aFullName + Environment.NewLine +
+                           "訂單編號 : " + aQryOrderPay.TSResultContent.OrderNo + Environment.NewLine +
                            "日期     : " + DateTime.Now.ToLocalTime().ToString() + Environment.NewLine +
                            "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + Environment.NewLine +
                            "付款方式 : " + "ATM轉帳/匯款" + Environment.NewLine +
@@ -151,7 +154,8 @@ namespace QPayBackend.Tools
                         // 收費單付款狀態
                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_status", 100000001); // 100000001 = 信用卡已繳費
                         // 收費單說明
-                        this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", Description);
+                        String aOriginalDescription = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aFeeEntity, "new_description");
+                        this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", aOriginalDescription + Description);
 
                         if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("C"))
                         {
@@ -178,7 +182,8 @@ namespace QPayBackend.Tools
                         // 收費單付款狀態
                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_status", 100000002); // 100000002 = ATM轉帳/匯款已繳費
                         // 收費單說明
-                        this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", Description);
+                        String aOriginalDescription = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aFeeEntity, "new_description");
+                        this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", aOriginalDescription + Description);
 
                         if ( aQryOrderPay.TSResultContent.OrderNo.StartsWith("A") )
                         {
@@ -187,7 +192,7 @@ namespace QPayBackend.Tools
                         }
 
                         // 更新收費單
-                        this.m_ToolUtilityClass.UpdateEntity(ref aFeeEntity);
+                        this.m_ToolUtilityClass.UpdateEntity( ref aFeeEntity );
 
                         // LINE 通知付款人
                         this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description);
