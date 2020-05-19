@@ -181,6 +181,27 @@ namespace QPayBackend.Tools
                         }
                         #endregion
 
+                        #region// 設定連絡人信用卡資訊
+                        if (aQryOrderPay.TSResultContent.CCToken != "")
+                        {
+                            String VisaInfo = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aContact, "new_visa_info");
+
+                            if (VisaInfo.Contains(aQryOrderPay.TSResultContent.CCToken) != true)
+                            {
+                                VisaInfo = VisaInfo + "|" +
+                                        aQryOrderPay.TSResultContent.CCToken + "，" +
+                                        aQryOrderPay.TSResultContent.LeftCCNo + "，" +
+                                        aQryOrderPay.TSResultContent.RightCCNo + "，" +
+                                        //aQryOrderPay.TSResultContent.AuthCode + "，" +
+                                        aQryOrderPay.TSResultContent.CCExpDate;
+
+                                this.m_ToolUtilityClass.SetEntityStringAttribute(ref aContact, "new_visa_info", VisaInfo);
+
+                                this.m_ToolUtilityClass.UpdateEntity(ref aContact);
+                            }
+                        }
+                        #endregion
+
                         // LINE 通知付款人
                         this.m_PushUtility.SendMessage(UserLineId, "信用卡付款結果成功!" + Environment.NewLine + Description);
 
