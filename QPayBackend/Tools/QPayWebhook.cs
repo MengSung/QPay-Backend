@@ -166,6 +166,21 @@ namespace QPayBackend.Tools
                         // 更新收費單
                         this.m_ToolUtilityClass.UpdateEntity(ref aFeeEntity);
 
+                        #region// 取得上課紀錄單，更新報名狀態
+                        Guid aStorLessonsId = this.m_ToolUtilityClass.GetEntityLookupAttribute(ref aFeeEntity, "new_stor_lessons_new_fee");
+                        if (aStorLessonsId != Guid.Empty)
+                        {
+                            Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
+
+                            #region 報名狀態
+                            // 已報名-已繳費
+                            this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000001);
+                            #endregion
+
+                            this.m_ToolUtilityClass.UpdateEntity(ref aStorLessons);
+                        }
+                        #endregion
+
                         // LINE 通知付款人
                         this.m_PushUtility.SendMessage(UserLineId, "信用卡付款結果成功!" + Environment.NewLine + Description);
 
@@ -193,6 +208,21 @@ namespace QPayBackend.Tools
 
                         // 更新收費單
                         this.m_ToolUtilityClass.UpdateEntity( ref aFeeEntity );
+
+                        #region// 取得上課紀錄單，更新報名狀態
+                        Guid aStorLessonsId = this.m_ToolUtilityClass.GetEntityLookupAttribute(ref aFeeEntity, "new_stor_lessons_new_fee");
+                        if (aStorLessonsId != Guid.Empty)
+                        {
+                            Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
+
+                            #region 報名狀態
+                            // 已報名-已繳費
+                            this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000001);
+                            #endregion
+
+                            this.m_ToolUtilityClass.UpdateEntity(ref aStorLessons);
+                        }
+                        #endregion
 
                         // LINE 通知付款人
                         this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description);
