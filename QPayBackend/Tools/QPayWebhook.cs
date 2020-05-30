@@ -65,30 +65,38 @@ namespace QPayBackend.Tools
         {
             try
             {
-                if (aBackendPostData.ShopNo != null)
-                {
-                    this.m_LineMessagingClient = new LineMessagingClient(ConvertShopNoToChannelAccessToken(aBackendPostData.ShopNo));
-                }
-                else
+                QryOrderPay aQryOrderPay = new QryOrderPay();
+
+                aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.PayToken);
+
+                if (aBackendPostData.ShopNo == null)
                 {
                     this.m_LineMessagingClient = new LineMessagingClient(ConvertShopNoToChannelAccessToken(""));
+
+                    m_PushUtility = new PushUtility(m_LineMessagingClient);
 
                     this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "ShopNo值為NULL");
 
                     return Json(new Dictionary<string, string>() { { "Status", "S" } });
                 }
-                m_PushUtility = new PushUtility(m_LineMessagingClient);
 
-                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "呼叫雲端ATM轉帳");
+                if ( aQryOrderPay.TSResultContent.Param2 != "" )
+                {
+                    m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
+                    this.m_LineMessagingClient = new LineMessagingClient(ConvertOrganzitionToChannelAccessToken(aQryOrderPay.TSResultContent.Param2));
+                    m_PushUtility = new PushUtility(m_LineMessagingClient);
+                }
+                else
+                {
+                    m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", ConvertShopNoToOrganization(aBackendPostData.ShopNo));
+                    if (aBackendPostData.ShopNo != null)
+                    {
+                        this.m_LineMessagingClient = new LineMessagingClient(ConvertShopNoToChannelAccessToken(aBackendPostData.ShopNo));
+                        m_PushUtility = new PushUtility(m_LineMessagingClient);
+                    }
+                }
 
-                m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", ConvertShopNoToOrganization(aBackendPostData.ShopNo));
-
-                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "建立m_ToolUtilityClass完成");
-
-                QryOrderPay aQryOrderPay = new QryOrderPay();
-
-                aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.PayToken);
-
+                
                 #region// 取得收費單
                 Entity aFeeEntity = this.m_ToolUtilityClass.RetrieveEntity("new_fee", new Guid(aQryOrderPay.TSResultContent.Param1));
                 if (aFeeEntity == null)
@@ -271,7 +279,8 @@ namespace QPayBackend.Tools
             switch (ShopNo)
             {
                 case "NA0149_001":
-                    return "yhchurchback";
+                    //return "chunghsiaochurch";
+                    //return "yhchurchback";
                     //return "jesus";
                 default:
                     return null;
@@ -284,10 +293,24 @@ namespace QPayBackend.Tools
                 case "NA0149_001":
                     // 永和禮拜堂
                     return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
-                    // 音訊教會
-                    //return @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
+                // 音訊教會
+                //return @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
+                // 忠孝路長老教會
+                //return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
+                default:
+                    return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
+            }
+        }
+        private string ConvertOrganzitionToChannelAccessToken(String ShopNo)
+        {
+            switch (ShopNo)
+            {
+                case "yhchurchback":
+                    // 永和禮拜堂
+                    return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
+                case "chunghsiaochurch":
                     // 忠孝路長老教會
-                    //return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
+                    return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
                 default:
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
