@@ -96,7 +96,6 @@ namespace QPayBackend.Tools
                     }
                 }
 
-                
                 #region// 取得收費單
                 Entity aFeeEntity = this.m_ToolUtilityClass.RetrieveEntity("new_fee", new Guid(aQryOrderPay.TSResultContent.Param1));
                 if (aFeeEntity == null)
@@ -132,7 +131,7 @@ namespace QPayBackend.Tools
                     Description = "姓名     : " + aFullName + Environment.NewLine +
                            "日期     : " + DateTime.Now.ToLocalTime().ToString() + Environment.NewLine +
                            "訂單編號 : " + aQryOrderPay.TSResultContent.OrderNo + Environment.NewLine +
-                           "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + Environment.NewLine +
+                           "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + "元" + Environment.NewLine +
                            "付款方式 : " + "信用卡" + Environment.NewLine +
                            "說明     : " + FeeDescription + aQryOrderPay.Description + Environment.NewLine +
                            "--------------------" + Environment.NewLine;
@@ -143,7 +142,7 @@ namespace QPayBackend.Tools
                            "姓名     : " + aFullName + Environment.NewLine +
                            "訂單編號 : " + aQryOrderPay.TSResultContent.OrderNo + Environment.NewLine +
                            "日期     : " + DateTime.Now.ToLocalTime().ToString() + Environment.NewLine +
-                           "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + Environment.NewLine +
+                           "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + "元" + Environment.NewLine +
                            "付款方式 : " + "ATM轉帳/匯款" + Environment.NewLine +
                            "說明     : " + FeeDescription + aQryOrderPay.Description + Environment.NewLine +
                            "--------------------" + Environment.NewLine;
