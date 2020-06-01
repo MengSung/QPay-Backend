@@ -157,7 +157,7 @@ namespace QPayBackend.Tools
                         // 收費單實收金額
                         this.m_ToolUtilityClass.SetEntityMoneyAttribute(ref aFeeEntity, "new_fee_really_paid", new Money((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100));
                         // 收費單實現阿拉伯數字到大寫中文的轉換，金額轉為大寫金額
-                        this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_big_chinese_number", MoneyToChinese(aQryOrderPay.TSResultContent.Amount));
+                        this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_big_chinese_number", MoneyToChinese((Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString()));
                         // 收費單付款方式
                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_way", 100000001); // 100000001 = 信用卡
                         // 收費單付款狀態
@@ -223,7 +223,7 @@ namespace QPayBackend.Tools
                         // 收費單實收金額
                         this.m_ToolUtilityClass.SetEntityMoneyAttribute(ref aFeeEntity, "new_fee_really_paid", new Money((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100));
                         // 收費單實現阿拉伯數字到大寫中文的轉換，金額轉為大寫金額
-                        this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_big_chinese_number", MoneyToChinese(aQryOrderPay.TSResultContent.Amount));
+                        this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_big_chinese_number", MoneyToChinese((Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString()));
                         // 收費單付款方式
                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_way", 100000002); // 100000002 = ATM轉帳/匯款
                         // 收費單付款狀態
