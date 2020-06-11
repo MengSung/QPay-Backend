@@ -195,14 +195,16 @@ namespace QPayBackend.Tools
                         {
                             String VisaInfo = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aContact, "new_visa_info");
 
-                            if (VisaInfo.Contains(aQryOrderPay.TSResultContent.CCToken) != true)
+                            if ( IsCreditCardInList(aContact, aQryOrderPay) != true )
                             {
-                                VisaInfo = VisaInfo + "|" +
+                                VisaInfo =
                                         aQryOrderPay.TSResultContent.CCToken + "，" +
                                         aQryOrderPay.TSResultContent.LeftCCNo + "，" +
                                         aQryOrderPay.TSResultContent.RightCCNo + "，" +
                                         //aQryOrderPay.TSResultContent.AuthCode + "，" +
-                                        aQryOrderPay.TSResultContent.CCExpDate;
+                                        aQryOrderPay.TSResultContent.CCExpDate +
+                                        "|" + VisaInfo;
+
 
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aContact, "new_visa_info", VisaInfo);
 
@@ -667,6 +669,52 @@ namespace QPayBackend.Tools
             }
 
         }
+        public bool IsCreditCardInList(Entity aContact, QryOrderPay aQryOrderPay)
+        {
+            #region// 取得連絡人信用卡資訊
+
+            String VisaInfo = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aContact, "new_visa_info");
+
+            if (VisaInfo != "")
+            {
+                // 有儲存的信用卡
+                String[] VisaInfoSplit = VisaInfo.Split('|');
+
+                if (VisaInfoSplit.Length > 0)
+                {
+                    // 檢驗一個一個的信用卡是否重覆
+                    foreach (String CreditCard in VisaInfoSplit)
+                    {
+                        String[] VisaCCTokenSplit = CreditCard.Split('，');
+
+                        if (VisaCCTokenSplit.Length == 4)
+                        {
+                            if
+                                (
+                                    VisaCCTokenSplit[1] == aQryOrderPay.TSResultContent.LeftCCNo &&
+                                    VisaCCTokenSplit[2] == aQryOrderPay.TSResultContent.RightCCNo &&
+                                    VisaCCTokenSplit[3] == aQryOrderPay.TSResultContent.CCExpDate
+                                )
+                            {
+                                // 有一樣的信用卡
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // 還沒有儲存的信用卡
+                return true;
+            }
+
+            // 每個儲存的信用卡與目前要儲存的信用卡都不一樣
+            return false;
+
+            #endregion
+        }
+
         #endregion
     }
 
