@@ -24,6 +24,9 @@ namespace QPayBackend.Tools
         // 胡夢嵩回傳　EXCEPTION　專用的ＩＤ
         private const String MENGSUNG_LINE_ID = @"U7638e4ed509708a3573ba6d69970583d";
 
+        // 音訊教會-雲端除錯用
+        private const String CHANNEL_ACCESS_TOKEN = @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
+
         public QPayAtmWebhook()
         {
             m_QPayProcessor = new QPayProcessor();
@@ -60,11 +63,16 @@ namespace QPayBackend.Tools
         }
         #endregion
 
-
         public JsonResult QPayBackendUrl([FromBody] BackendPostData aBackendPostData)
         {
             try
             {
+                this.m_LineMessagingClient = new LineMessagingClient(CHANNEL_ACCESS_TOKEN);
+
+                m_PushUtility = new PushUtility(m_LineMessagingClient);
+
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "進入永豐金流後台呼叫!" );
+
                 QryOrderPay aQryOrderPay = new QryOrderPay();
 
                 aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.PayToken);
@@ -308,14 +316,18 @@ namespace QPayBackend.Tools
         }
         private string ConvertOrganzitionToChannelAccessToken(String ShopNo)
         {
+            //客製化
             switch (ShopNo)
             {
                 case "yhchurchback":
-                    // 永和禮拜堂
+                    // 永和禮拜堂(公司研發)
                     return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
                 case "chunghsiaochurch":
                     // 忠孝路長老教會
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
+                case "jesus":
+                    // 音訊教會
+                    return @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
                 default:
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
