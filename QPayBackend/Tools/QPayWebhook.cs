@@ -67,12 +67,6 @@ namespace QPayBackend.Tools
         {
             try
             {
-                this.m_LineMessagingClient = new LineMessagingClient(CHANNEL_ACCESS_TOKEN);
-
-                m_PushUtility = new PushUtility(m_LineMessagingClient);
-
-                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "進入永豐金流後台呼叫!" );
-
                 QryOrderPay aQryOrderPay = new QryOrderPay();
 
                 aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.PayToken);
