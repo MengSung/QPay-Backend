@@ -109,13 +109,13 @@ namespace QPayBackend.Tools
                     // 收費單付款狀態
                     // 信用卡已繳費 100000001
                     // ATM轉帳/匯款已繳費 100000002
-                    int PayStatus = this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status");
+                    //int PayStatus = this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status");
                     //if (PayStatus == 100000001 || PayStatus == 100000002)
-                    if ( PayStatus == 100000001 )
-                    {
-                            // 已付款過了
-                            return Json(new Dictionary<string, string>() { { "Status", "S" } });
-                    }
+                    //if ( PayStatus == 100000001 )
+                    //{
+                    //        // 已付款過了
+                    //        return Json(new Dictionary<string, string>() { { "Status", "S" } });
+                    //}
                 }
                 #endregion
                 // 取得付款人
@@ -130,7 +130,7 @@ namespace QPayBackend.Tools
                 if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("C"))
                 {
                     Description = 
-                            "姓名     : " + aFullName + Environment.NewLine +
+                           "姓名     : " + aFullName + Environment.NewLine +
                            "日期     : " + DateTime.Now.ToLocalTime().ToString() + Environment.NewLine +
                            "訂單編號 : " + aQryOrderPay.TSResultContent.OrderNo + Environment.NewLine +
                            "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + "元" + Environment.NewLine +
