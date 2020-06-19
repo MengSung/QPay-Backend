@@ -41,7 +41,7 @@ namespace ToolUtilityNameSpace
         #region (雲端機房)
         private const String SERVER = "speechmessage.com.tw";
         private const String PORT = "7777";
-        //private const String ORGANIZATION = "abundance";
+        //private const String ORGANIZATION = "";
         private const String USERNAME = "Administrator@speechmessage.com.tw";
         private const String PASSWORD = "hu9840";
         private const String DOMAIN = "DYNAMICS-365";
@@ -50,7 +50,7 @@ namespace ToolUtilityNameSpace
         #region (公司發展)
         //private const String SERVER = "speechmessage.com.tw";
         //private const String PORT = "7777";
-        ////private const String ORGANIZATION = "yhchurchback";
+        ////private const String ORGANIZATION = "";
         //private const String USERNAME = "Administrator@speechmessage.com.tw";
         //private const String PASSWORD = "hu9840";
         //private const String DOMAIN = "SPEECHMESSAGE";
