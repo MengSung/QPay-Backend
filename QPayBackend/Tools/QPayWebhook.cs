@@ -87,14 +87,18 @@ namespace QPayBackend.Tools
                     m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
                     this.m_LineMessagingClient = new LineMessagingClient(ConvertOrganzitionToChannelAccessToken(aQryOrderPay.TSResultContent.Param2));
                     m_PushUtility = new PushUtility(m_LineMessagingClient);
+
+                    ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001");
+
                 }
                 else
                 {
-                    m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", ConvertShopNoToOrganization(aBackendPostData.ShopNo));
                     if (aBackendPostData.ShopNo != null)
                     {
+                        m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", ConvertShopNoToOrganization(aBackendPostData.ShopNo));
                         this.m_LineMessagingClient = new LineMessagingClient(ConvertShopNoToChannelAccessToken(aBackendPostData.ShopNo));
                         m_PushUtility = new PushUtility(m_LineMessagingClient);
+                        ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "002");
                     }
                     else
                     {
@@ -105,7 +109,9 @@ namespace QPayBackend.Tools
                 }
 
                 #region// 取得收費單
+                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "003");
                 Entity aFeeEntity = this.m_ToolUtilityClass.RetrieveEntity("new_fee", new Guid(aQryOrderPay.TSResultContent.Param1));
+                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "004");
                 #endregion
                 if (aFeeEntity != null)
                 {
@@ -117,11 +123,16 @@ namespace QPayBackend.Tools
                     // 現金已繳費 100000003
 
                     // 取得付款人
+                    ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "004");
+
                     Entity aContact = this.m_ToolUtilityClass.RetrieveEntity("contact", this.m_ToolUtilityClass.GetEntityLookupAttribute(aFeeEntity, "new_contact_new_fee"));
                     // 取得付款人姓名
                     String aFullName = this.m_ToolUtilityClass.GetEntityStringAttribute(aContact, "fullname");
                     // 取得付款人 Line Id
                     String UserLineId = this.m_ToolUtilityClass.GetEntityStringAttribute(aContact, "new_lineid");
+
+                    ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005");
+
 
                     #region// 收費單描述說明
                     String Description = "";
@@ -150,9 +161,13 @@ namespace QPayBackend.Tools
                     #endregion
                     if (aQryOrderPay.Status == "S")
                     {
+                        ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "006");
+
                         if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("C"))
                         {
                             // 處理信用卡
+                            ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "007");
+
                             if (this.m_ToolUtilityClass.GetEntityStringAttribute(aFeeEntity, "new_payment_records").Contains(aQryOrderPay.TSResultContent.OrderNo) != true && this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status") == 100000000)
                             {
                                 #region// 付款狀態 等於 "新建立"
@@ -245,8 +260,10 @@ namespace QPayBackend.Tools
                         else
                         {
                             // 處理帳號訂單 : ATM轉帳/匯款
+                            ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008");
                             if (this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status") == 100000000)
                             {
+                                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.1");
                                 #region// 付款狀態 等於 "新建立"
 
                                 // 收費單付款日期
@@ -264,7 +281,7 @@ namespace QPayBackend.Tools
                                                                                                                             // 收費單說明
                                 String aOriginalDescription = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aFeeEntity, "new_description");
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", aOriginalDescription + Description);
-
+                                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.2");
                                 // 付款紀錄
                                 String aPaymentRecords =
                                         this.m_ToolUtilityClass.GetEntityStringAttribute(aFeeEntity, "new_payment_records") +
@@ -273,6 +290,8 @@ namespace QPayBackend.Tools
                                         "，金額:" + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() +
                                         Environment.NewLine;
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_payment_records", aPaymentRecords);
+
+                                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.3");
 
                                 if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("A"))
                                 {
@@ -314,6 +333,8 @@ namespace QPayBackend.Tools
                     }
                 }
 
+                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "009");
+
                 return Json(new Dictionary<string, string>() { { "Status", "S" } });
             }
             catch (System.Exception e)
@@ -354,7 +375,8 @@ namespace QPayBackend.Tools
                     // 忠孝路長老教會
                     //return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
                 default:
-                    return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
+                    //return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
+                    return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
             }
         }
         private string ConvertOrganzitionToChannelAccessToken(String ShopNo)
