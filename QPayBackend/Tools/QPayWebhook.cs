@@ -30,7 +30,6 @@ namespace QPayBackend.Tools
         public QPayAtmWebhook()
         {
             m_QPayProcessor = new QPayProcessor();
-
         }
 
         #region 釋放記憶體
@@ -69,7 +68,8 @@ namespace QPayBackend.Tools
             {
                 QryOrderPay aQryOrderPay = new QryOrderPay();
 
-                aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.PayToken);
+                //aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.ShopNo, aBackendPostData.PayToken);
+                aQryOrderPay = m_QPayProcessor.OrderPayQuery( aBackendPostData.PayToken );
 
                 if (aBackendPostData.ShopNo == null)
                 {
@@ -341,7 +341,10 @@ namespace QPayBackend.Tools
             {
                 String ErrorString = "ERROR : FullName = " + this.GetType().FullName.ToString() + " , Time = " + DateTime.Now.ToString() + " , Description = " + e.ToString();
 
-                this.m_PushUtility.SendMessage( MENGSUNG_LINE_ID, ErrorString );
+                if (this.m_PushUtility != null)
+                {
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, ErrorString);
+                }
 
                 return Json(new Dictionary<string, string>() { { "Status", "S" } });
                 //throw e;
@@ -368,8 +371,10 @@ namespace QPayBackend.Tools
             switch (ShopNo)
             {
                 case "NA0149_001":
-                    // 永和禮拜堂
-                    return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
+                    // 永和禮拜堂(公司研發)
+                    return @"Z821JyND95uiABqED/bwOcTyCkHMcp92JBDYJn/oefwaIseWFyLSDKtTeB+SqMI1kquELAvJ7TSN+EDhl7WGgfFLgT9zehh8+3ocAQEKmfCzTzio5xoHKxfQzrvlXmCtp7wfm4vuPT33dr7tBJrkOAdB04t89/1O/w1cDnyilFU=";
+                    // 永和禮拜堂(雲端機房)
+                    //return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
                     // 音訊教會
                     //return @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
                     // 忠孝路長老教會

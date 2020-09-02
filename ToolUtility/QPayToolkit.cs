@@ -22,8 +22,8 @@ namespace ToolUtilityNameSpace
     {
         private static string _currentVersion = "1.0.0";
         //private static string _site = ConfigurationManager.AppSettings["QPayWebAPIUrl"];
-        private static string _site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
-        //private static string _site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+        //private static string _site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
+        private static string _site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
 
         #region Public method
         #region 訂單建立 (虛擬帳號、信用卡)

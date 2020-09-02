@@ -14,7 +14,8 @@ namespace ToolUtilityNameSpace
     public class QPayProcessor
     {
         #region 資料區
-        string m_ShopNo = "NA0149_001";
+        //string m_ShopNo = "NA0149_001";
+        string m_ShopNo = "DA1626_001";
 
         //private const String RETURN_URL = "https://yhchurchback.speechmessage.com.tw:454/api/QPay/QPayReturnUrl";
         //private const String BACKEND_URL = "https://yhchurchback.speechmessage.com.tw:454/api/QPay/QPayBackendUrl";
@@ -31,6 +32,10 @@ namespace ToolUtilityNameSpace
         #region 初始化
         public QPayProcessor()
         {
+        }
+        public QPayProcessor(String aShopNo)
+        {
+            m_ShopNo = aShopNo;
         }
         #endregion
         #region 永豐金流工具區
@@ -255,6 +260,18 @@ namespace ToolUtilityNameSpace
             QryOrderPayReq orderPayQueryReq = new QryOrderPayReq()
             {
                 ShopNo = m_ShopNo,
+                PayToken = aPayToken
+            };
+
+            QryOrderPay retObj = QPayToolkit.OrderPayQuery(orderPayQueryReq);
+
+            return retObj;
+        }
+        public QryOrderPay OrderPayQuery( String aShopNo, String aPayToken)
+        {
+            QryOrderPayReq orderPayQueryReq = new QryOrderPayReq()
+            {
+                ShopNo = aShopNo,
                 PayToken = aPayToken
             };
 
