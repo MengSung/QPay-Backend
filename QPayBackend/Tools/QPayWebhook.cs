@@ -68,8 +68,8 @@ namespace QPayBackend.Tools
             {
                 QryOrderPay aQryOrderPay = new QryOrderPay();
 
-                //aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.ShopNo, aBackendPostData.PayToken);
-                aQryOrderPay = m_QPayProcessor.OrderPayQuery( aBackendPostData.PayToken );
+                aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.ShopNo, aBackendPostData.PayToken);
+                //aQryOrderPay = m_QPayProcessor.OrderPayQuery( aBackendPostData.PayToken );
 
                 if (aBackendPostData.ShopNo == null)
                 {
