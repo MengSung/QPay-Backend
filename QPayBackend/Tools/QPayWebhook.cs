@@ -417,6 +417,7 @@ namespace QPayBackend.Tools
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
         }
+
         #region 工具區
         /// <summary>
         /// 實現阿拉伯數字到大寫中文的轉換，金額轉為大寫金額
@@ -426,7 +427,6 @@ namespace QPayBackend.Tools
         public string MoneyToChinese(string LowerMoney)
 
         {
-
             string functionReturnValue = null;
 
             bool IsNegative = false; // 是否是負數

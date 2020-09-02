@@ -38,7 +38,7 @@ namespace ToolUtilityNameSpace
             m_ShopNo = aShopNo;
         }
         #endregion
-        #region 永豐金流工具區
+        #region 永豐金流程式區
         public async Task<CreOrder> CreOrderCard(int Amount, String ProductName)
         {
             //設定參數
@@ -263,7 +263,7 @@ namespace ToolUtilityNameSpace
                 PayToken = aPayToken
             };
 
-            QryOrderPay retObj = QPayToolkit.OrderPayQuery(orderPayQueryReq);
+            QryOrderPay retObj = QPayToolkit.OrderPayQuery(orderPayQueryReq, ConvertShopNoToHashCode(m_ShopNo));
 
             return retObj;
         }
@@ -275,11 +275,10 @@ namespace ToolUtilityNameSpace
                 PayToken = aPayToken
             };
 
-            QryOrderPay retObj = QPayToolkit.OrderPayQuery(orderPayQueryReq);
+            QryOrderPay retObj = QPayToolkit.OrderPayQuery(orderPayQueryReq, ConvertShopNoToHashCode(aShopNo));
 
             return retObj;
         }
-
         public QryOrder OrderQuery(String aShopNo, String OrderNo)
         {
             QryOrderReq orderQueryReq = new QryOrderReq()
@@ -347,6 +346,25 @@ namespace ToolUtilityNameSpace
             return retObj;
         }
         #endregion
+
+        #region 永豐金流工具區
+        private string ConvertShopNoToHashCode(String aShopNo)
+        {
+            //客製化
+            switch (aShopNo)
+            {
+                case "DA1626_001":
+                    // 永和禮拜堂(公司研發)
+                    return "D1695F439A69448F,7E460E920A184845,DEA83EFB714943F3,DC237C5C69914F0C";
+                case "NA0149_001":
+                    // 音訊教會
+                    return "D1695F439A69448F,7E460E920A184845,DEA83EFB714943F3,DC237C5C69914F0C";
+                default:
+                    return "D1695F439A69448F,7E460E920A184845,DEA83EFB714943F3,DC237C5C69914F0C";
+            }
+        }
+        #endregion
+
     }
 
 }
