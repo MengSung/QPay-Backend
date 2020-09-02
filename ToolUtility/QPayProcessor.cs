@@ -346,7 +346,6 @@ namespace ToolUtilityNameSpace
             return retObj;
         }
         #endregion
-
         #region 永豐金流工具區
         private string ConvertShopNoToHashCode(String aShopNo)
         {
@@ -364,7 +363,6 @@ namespace ToolUtilityNameSpace
             }
         }
         #endregion
-
     }
 
 }

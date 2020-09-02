@@ -171,7 +171,7 @@ namespace QPayBackend.Tools
                             if (this.m_ToolUtilityClass.GetEntityStringAttribute(aFeeEntity, "new_payment_records").Contains(aQryOrderPay.TSResultContent.OrderNo) != true && this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status") == 100000000)
                             {
                                 #region// 付款狀態 等於 "新建立"
-                                #region 信用卡會回傳2次，一次是RETURN_URL、一次是BACKEND_URL，為免收費單紀錄信用卡兩次，所以如果這裡已經有信用卡訂單編號，就不再處理了
+                                #region 信用卡會回傳2次，一次是RETURN_URL、一次是BACKEND_URL，為免收費單紀錄信用卡兩次，所以如果這裡沒有信用卡訂單編號或是等於 "新建立"，才要進行處理了
                                 // 收費單付款日期
                                 this.m_ToolUtilityClass.SetEntityDateTimeAttribute(ref aFeeEntity, "new_pay_date", DateTime.Now.ToLocalTime());
                                 // 收費單總共實收金額
@@ -181,9 +181,9 @@ namespace QPayBackend.Tools
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_big_chinese_number", MoneyToChinese((Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString()));
                                 // 收費單付款方式
                                 this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_way", 100000001); // 100000001 = 信用卡
-                                                                                                                         // 收費單付款狀態
+                                // 收費單付款狀態
                                 this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_status", 100000001); // 100000001 = 信用卡已繳費
-                                                                                                                            // 收費單說明
+                                // 收費單說明
                                 String aOriginalDescription = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aFeeEntity, "new_description");
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", aOriginalDescription + Description);
                                 // 付款紀錄
@@ -276,9 +276,9 @@ namespace QPayBackend.Tools
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_big_chinese_number", MoneyToChinese((Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString()));
                                 // 收費單付款方式
                                 this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_way", 100000002); // 100000002 = ATM轉帳/匯款
-                                                                                                                         // 收費單付款狀態
+                                // 收費單付款狀態
                                 this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_status", 100000002); // 100000002 = ATM轉帳/匯款已繳費
-                                                                                                                            // 收費單說明
+                                // 收費單說明
                                 String aOriginalDescription = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aFeeEntity, "new_description");
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", aOriginalDescription + Description);
                                 ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.2");
@@ -286,7 +286,7 @@ namespace QPayBackend.Tools
                                 String aPaymentRecords =
                                         this.m_ToolUtilityClass.GetEntityStringAttribute(aFeeEntity, "new_payment_records") +
                                         DateTime.Now.ToString() +
-                                        ": ATM轉帳/匯款訂單編號= " + aQryOrderPay.TSResultContent.OrderNo +
+                                        ": BackendUrl => ATM轉帳/匯款訂單編號= " + aQryOrderPay.TSResultContent.OrderNo +
                                         "，金額:" + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() +
                                         Environment.NewLine;
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_payment_records", aPaymentRecords);
