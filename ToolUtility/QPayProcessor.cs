@@ -279,6 +279,19 @@ namespace ToolUtilityNameSpace
 
             return retObj;
         }
+
+        public QryOrder OrderQuery(String aShopNo, String OrderNo)
+        {
+            QryOrderReq orderQueryReq = new QryOrderReq()
+            {
+                ShopNo = aShopNo,
+                OrderNo = OrderNo
+            };
+
+            QryOrder retObj = QPayToolkit.OrderQuery(orderQueryReq);
+
+            return retObj;
+        }
         public async Task<QryBill> BillQuery(String aPayDate)
         {
             QryBillReq billQueryReq = new QryBillReq()
