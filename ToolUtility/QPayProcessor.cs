@@ -357,10 +357,10 @@ namespace ToolUtilityNameSpace
                     // 永和禮拜堂(公司研發)
                     return "D1695F439A69448F,7E460E920A184845,DEA83EFB714943F3,DC237C5C69914F0C";
                 case "NA0149_001":
-                    // 音訊教會
-                    return "D1695F439A69448F,7E460E920A184845,DEA83EFB714943F3,DC237C5C69914F0C";
+                    // 音訊教會 SandBox
+                    return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
                 default:
-                    return "D1695F439A69448F,7E460E920A184845,DEA83EFB714943F3,DC237C5C69914F0C";
+                    return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
             }
         }
         #endregion
