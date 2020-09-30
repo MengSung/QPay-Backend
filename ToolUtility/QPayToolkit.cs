@@ -23,7 +23,7 @@ namespace ToolUtilityNameSpace
         private static string _currentVersion = "1.0.0";
         //private static string _site = ConfigurationManager.AppSettings["QPayWebAPIUrl"];
         //private static string _site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
-        private static string _site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+        public static string _site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
 
 
         // 永豐金流寄給永和禮拜堂的HASH CODE

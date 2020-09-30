@@ -15,16 +15,13 @@ namespace ToolUtilityNameSpace
     {
         #region 資料區
         //string m_ShopNo = "NA0149_001";
-        string m_ShopNo = "DA1626_001";
+        //string m_ShopNo = "DA1626_001";
+        string m_ShopNo = "";
 
-        //private const String RETURN_URL = "https://yhchurchback.speechmessage.com.tw:454/api/QPay/QPayReturnUrl";
-        //private const String BACKEND_URL = "https://yhchurchback.speechmessage.com.tw:454/api/QPay/QPayBackendUrl";
+        private const String RETURN_URL = "https://jesus.speechmessage.com.tw:362/api/QPayCard/QPayReturnUrl";
 
-        private const String RETURN_URL  = "https://yhchurchback.speechmessage.com.tw:454/api/QPayCard/QPayReturnUrl";
-        //private const String BACKEND_URL = "https://yhchurchback.speechmessage.com.tw:454/api/QPayAtm/PushSuccess";
-        //private const String BACKEND_URL = "http://yhchurchback.speechmessage.com.tw:80/api/QPayAtm/PushSuccess";
-        //private const String BACKEND_URL = "http://yhchurchback.speechmessage.com.tw/api/QPayAtm/PushSuccess";
-        private const String BACKEND_URL = "http://yhchurchback.speechmessage.com.tw/api/QPayAtm/QPayBackendUrl";
+        private const String BACKEND_URL = "http://QPaybackend.speechmessage.com.tw/api/QPayAtm/QPayBackendUrl"; // 雲端機房
+        //private const String BACKEND_URL = "http://QPbackendback.speechmessage.com.tw/api/QPayAtm/QPayBackendUrl";// 公司內部開發
 
         //private LinePayClient m_LinePayClient { get; }
 
@@ -255,18 +252,6 @@ namespace ToolUtilityNameSpace
 
             return retObj;
         }
-        public QryOrderPay OrderPayQuery(String aPayToken)
-        {
-            QryOrderPayReq orderPayQueryReq = new QryOrderPayReq()
-            {
-                ShopNo = m_ShopNo,
-                PayToken = aPayToken
-            };
-
-            QryOrderPay retObj = QPayToolkit.OrderPayQuery(orderPayQueryReq, ConvertShopNoToHashCode(m_ShopNo));
-
-            return retObj;
-        }
         public QryOrderPay OrderPayQuery( String aShopNo, String aPayToken)
         {
             QryOrderPayReq orderPayQueryReq = new QryOrderPayReq()
@@ -275,7 +260,7 @@ namespace ToolUtilityNameSpace
                 PayToken = aPayToken
             };
 
-            QryOrderPay retObj = QPayToolkit.OrderPayQuery(orderPayQueryReq, ConvertShopNoToHashCode(aShopNo));
+            QryOrderPay retObj = QPayToolkit.OrderPayQuery(orderPayQueryReq, ConvertShopNoToHashCodeAndSite(aShopNo));
 
             return retObj;
         }
@@ -347,16 +332,18 @@ namespace ToolUtilityNameSpace
         }
         #endregion
         #region 永豐金流工具區
-        private string ConvertShopNoToHashCode(String aShopNo)
+        private string ConvertShopNoToHashCodeAndSite(String aShopNo)
         {
             //客製化
             switch (aShopNo)
             {
                 case "DA1626_001":
                     // 永和禮拜堂(公司研發)
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
                     return "D1695F439A69448F,7E460E920A184845,DEA83EFB714943F3,DC237C5C69914F0C";
                 case "NA0149_001":
                     // 音訊教會 SandBox
+                    QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
                     return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
                 default:
                     return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
