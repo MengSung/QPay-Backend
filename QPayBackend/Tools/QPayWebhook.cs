@@ -13,6 +13,7 @@ namespace QPayBackend.Tools
 
     public class QPayAtmWebhook : Controller
     {
+        #region 資料區
         private LineMessagingClient m_LineMessagingClient { get; set; }
 
         private PushUtility m_PushUtility { get; set; }
@@ -26,12 +27,13 @@ namespace QPayBackend.Tools
 
         // 音訊教會-雲端除錯用
         private const String CHANNEL_ACCESS_TOKEN = @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
-
+        #endregion
+        #region 初始化
         public QPayAtmWebhook()
         {
             m_QPayProcessor = new QPayProcessor();
         }
-
+        #endregion
         #region 釋放記憶體
         private bool _disposed = false;
 
@@ -61,13 +63,14 @@ namespace QPayBackend.Tools
             Dispose(false);
         }
         #endregion
-
+        #region 主程式
         public JsonResult QPayBackendUrl([FromBody] BackendPostData aBackendPostData)
         {
             try
             {
                 QryOrderPay aQryOrderPay = new QryOrderPay();
 
+                // 取得訂單
                 aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.ShopNo, aBackendPostData.PayToken);
                 //aQryOrderPay = m_QPayProcessor.OrderPayQuery( aBackendPostData.PayToken );
 
@@ -351,7 +354,8 @@ namespace QPayBackend.Tools
             }
 
         }
-
+        #endregion
+        #region 商店代號對應區
         private string ConvertShopNoToOrganization( String ShopNo )
         {
             switch (ShopNo)
@@ -359,7 +363,7 @@ namespace QPayBackend.Tools
                 case "NA0149_001":
                 //return "chunghsiaochurch";
                 //return "yhchurchback";
-                //return "jesus";
+                return "jesus";
                 case "DA1626_001":
                     return "yhchurch";
                 default:
@@ -372,11 +376,11 @@ namespace QPayBackend.Tools
             {
                 case "NA0149_001":
                     // 永和禮拜堂(公司研發)
-                    return @"Z821JyND95uiABqED/bwOcTyCkHMcp92JBDYJn/oefwaIseWFyLSDKtTeB+SqMI1kquELAvJ7TSN+EDhl7WGgfFLgT9zehh8+3ocAQEKmfCzTzio5xoHKxfQzrvlXmCtp7wfm4vuPT33dr7tBJrkOAdB04t89/1O/w1cDnyilFU=";
+                    //return @"Z821JyND95uiABqED/bwOcTyCkHMcp92JBDYJn/oefwaIseWFyLSDKtTeB+SqMI1kquELAvJ7TSN+EDhl7WGgfFLgT9zehh8+3ocAQEKmfCzTzio5xoHKxfQzrvlXmCtp7wfm4vuPT33dr7tBJrkOAdB04t89/1O/w1cDnyilFU=";
                     // 永和禮拜堂(雲端機房)
                     //return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
                     // 音訊教會
-                    //return @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
+                    return @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
                     // 忠孝路長老教會
                     //return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
                 case "DA1626_001":
@@ -417,7 +421,7 @@ namespace QPayBackend.Tools
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
         }
-
+        #endregion
         #region 工具區
         /// <summary>
         /// 實現阿拉伯數字到大寫中文的轉換，金額轉為大寫金額
