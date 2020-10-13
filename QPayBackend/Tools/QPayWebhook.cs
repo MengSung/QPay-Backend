@@ -147,7 +147,8 @@ namespace QPayBackend.Tools
                                "訂單編號 : " + aQryOrderPay.TSResultContent.OrderNo + Environment.NewLine +
                                "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + "元" + Environment.NewLine +
                                "付款方式 : " + "信用卡" + Environment.NewLine +
-                               "說明     : " + aQryOrderPay.Description + Environment.NewLine +
+                               "程式呼叫 : " + aQryOrderPay.Description + Environment.NewLine +
+                               "交易結果 : " + aQryOrderPay.TSResultContent.Description + Environment.NewLine +
                                "--------------------" + Environment.NewLine;
                     }
                     else
@@ -158,14 +159,13 @@ namespace QPayBackend.Tools
                                "日期     : " + DateTime.Now.ToLocalTime().ToString() + Environment.NewLine +
                                "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + "元" + Environment.NewLine +
                                "付款方式 : " + "ATM轉帳/匯款" + Environment.NewLine +
-                               "說明     : " + aQryOrderPay.Description + Environment.NewLine +
+                               "程式呼叫 : " + aQryOrderPay.Description + Environment.NewLine +
+                               "交易結果 : " + aQryOrderPay.TSResultContent.Description + Environment.NewLine +
                                "--------------------" + Environment.NewLine;
                     }
                     #endregion
-                    if (aQryOrderPay.Status == "S")
+                    if (aQryOrderPay.Status == "S" && aQryOrderPay.TSResultContent.Status == "S")
                     {
-                        ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "006");
-
                         if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("C"))
                         {
                             // 處理信用卡
@@ -197,7 +197,6 @@ namespace QPayBackend.Tools
                                         "，金額:" + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() +
                                         Environment.NewLine;
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_payment_records", aPaymentRecords);
-
 
                                 if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("C"))
                                 {
@@ -333,6 +332,18 @@ namespace QPayBackend.Tools
                                 #endregion
                             }
                         }
+                    }
+                    else
+                    {
+                        // 收費單說明
+                        String aOriginalDescription = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aFeeEntity, "new_description");
+                        this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", aOriginalDescription + "付款結果失敗!" + Environment.NewLine + Description);
+
+                        // 更新收費單
+                        this.m_ToolUtilityClass.UpdateEntity(ref aFeeEntity);
+
+                        // LINE 通知付款人
+                        this.m_PushUtility.SendMessage(UserLineId, "付款失敗!" + Environment.NewLine + Description);
                     }
                 }
 
