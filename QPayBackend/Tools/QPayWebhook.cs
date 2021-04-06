@@ -214,14 +214,14 @@ namespace QPayBackend.Tools
                                     Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
 
                                     #region 報名狀態
-                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch")
+                                    if ( aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" )
                                     {
-                                        // 有審核的教會=>報名成功:永和禮拜堂
+                                        // 有小組長審核的教會=>報名成功:永和禮拜堂
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
                                     }
                                     else
                                     {
-                                        // 沒審核的教會
+                                        // 不需要小組長審核的教會
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000001);
                                     }
                                     #endregion
@@ -311,14 +311,14 @@ namespace QPayBackend.Tools
                                     Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
 
                                     #region 報名狀態
-                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch")
+                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch")
                                     {
-                                        // 有審核的教會=>報名成功:永和禮拜堂
+                                        // 有小組長審核的教會=>報名成功:永和禮拜堂 、 iM行動教會
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
                                     }
                                     else
                                     {
-                                        // 沒審核的教會
+                                        // 不需要小組長審核的教會
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000001);
                                     }
                                     #endregion
@@ -377,6 +377,9 @@ namespace QPayBackend.Tools
                     return "jesus";
                 case "DA1626_001":
                     return "yhchurch";
+                case "DA2424_001":
+                    // iM行動教會
+                    return "imchurch";
                 default:
                     return null;
             }
@@ -392,17 +395,16 @@ namespace QPayBackend.Tools
                     //return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
                     // 音訊教會
                     return @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
-                    // 忠孝路長老教會
-                    //return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
+                // 忠孝路長老教會
+                //return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
                 case "DA1626_001":
                     // 永和禮拜堂(公司研發)
                     //return @"Z821JyND95uiABqED/bwOcTyCkHMcp92JBDYJn/oefwaIseWFyLSDKtTeB+SqMI1kquELAvJ7TSN+EDhl7WGgfFLgT9zehh8+3ocAQEKmfCzTzio5xoHKxfQzrvlXmCtp7wfm4vuPT33dr7tBJrkOAdB04t89/1O/w1cDnyilFU=";
                     // 永和禮拜堂(雲端機房)
                     return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
-                    // 音訊教會
-                    //return @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
-                    // 忠孝路長老教會
-                    //return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
+                case "DA2424_001":
+                    // iM行動教會
+                    return @"XwSRWX0RxTtTvY/N6QZQ9YElOMH3OAxBf/3DAmWoXbIK3ymBsXEaU54owfdbPTQiQJPd10cWjC+JIWX6EvOCTbBdHmmJNC6xOOaioB91gPJPyDpl0IHQOQAzLA9J21zZ83SgIF6JwJbxC/8tSXv6RgdB04t89/1O/w1cDnyilFU=";
                 default:
                     //return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
                     return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
@@ -428,6 +430,9 @@ namespace QPayBackend.Tools
                 case "jesus":
                     // 音訊教會
                     return @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
+                case "imchurch":
+                    // iM行動教會
+                    return @"XwSRWX0RxTtTvY/N6QZQ9YElOMH3OAxBf/3DAmWoXbIK3ymBsXEaU54owfdbPTQiQJPd10cWjC+JIWX6EvOCTbBdHmmJNC6xOOaioB91gPJPyDpl0IHQOQAzLA9J21zZ83SgIF6JwJbxC/8tSXv6RgdB04t89/1O/w1cDnyilFU=";
                 default:
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
