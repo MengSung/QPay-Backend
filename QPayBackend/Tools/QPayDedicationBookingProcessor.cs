@@ -65,18 +65,20 @@ namespace QPayBackend.Tools
         {
             try
             {
+                #region 取得對應的教會組織
                 if ( aQryOrderPay.TSResultContent.Param2 != "" )
                 {
                     m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
                     this.m_LineMessagingClient = new LineMessagingClient(ConvertOrganzitionToChannelAccessToken(aQryOrderPay.TSResultContent.Param2));
                     m_PushUtility = new PushUtility(m_LineMessagingClient);
+                    return Json(new Dictionary<string, string>() { { "Status", "S" } });
                 }
                 else
                 {
                     return Json(new Dictionary<string, string>() { { "Status", "S" } });
                 }
-
-                #region 處理認獻單
+                #endregion
+                #region 處理取得認獻單
                 // 取得認獻
                 Entity aDedicationBookingEntity = this.m_ToolUtilityClass.RetrieveEntity("new_dedication_booking", new Guid(aQryOrderPay.TSResultContent.Param1));
 
@@ -88,10 +90,6 @@ namespace QPayBackend.Tools
                 }
                 else { }
                 #endregion
-
-                //處理認獻單定期定額的第幾期字串
-                this.m_ToolUtilityClass.SetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period", ProcessStageNumber(aQryOrderPay.TSResultContent.OrderNo));
-                this.m_ToolUtilityClass.UpdateEntity(ref aDedicationBookingEntity);
 
                 #endregion
                 #region 處理付款人
@@ -123,46 +121,83 @@ namespace QPayBackend.Tools
                 }
                 #endregion
                 #endregion
-                // 收費單描述說明
+                #region 收費單描述說明
                 String Description =
                                      "姓名     : " + aFullName + Environment.NewLine +
                                      "訂單編號 : " + aQryOrderPay.TSResultContent.OrderNo + Environment.NewLine +
                                      "日期     : " + DateTime.Now.ToLocalTime().ToString() + Environment.NewLine +
                                      "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + Environment.NewLine +
-                                     "付款方式 : " + "信用卡" + Environment.NewLine +
+                                     "付款方式 : " + "信用卡定期定額" + Environment.NewLine +
+                                     "總期數 : " + this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_total_stages") + Environment.NewLine +
+                                     "目前期數 : " + ProcessStageNumber(aQryOrderPay.TSResultContent.OrderNo) + Environment.NewLine +
                                      "程式呼叫 : " + aQryOrderPay.Description + Environment.NewLine +
                                      "交易結果 : " + aQryOrderPay.TSResultContent.Description + Environment.NewLine +
                                      //"這是 ChurcchReport Webhook!!" + Environment.NewLine +
                                      "--------------------" + Environment.NewLine;
-
-                // 建立收費單
+                #endregion
+                #region 建立收費單
                 CreateFee(aContact, aDedicationBookingEntity, aQryOrderPay, Description);
+                #endregion
+                #region 處理認獻單定期定額的第幾期字串
+                String StageNumber = ProcessStageNumber(aQryOrderPay.TSResultContent.OrderNo);
+                this.m_ToolUtilityClass.SetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period", StageNumber);
 
+                if (Convert.ToUInt32(this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_total_stages")) > Convert.ToUInt32(StageNumber))
+                {
+                    // 總期數大於目前期數
+                    // 認獻單狀態 = 進行中
+                    this.m_ToolUtilityClass.SetOptionSetAttribute(ref aDedicationBookingEntity, "new_dedication_booking_status", 100000001);
+                }
+                else
+                {
+                    // 總期數小於或等於目前期數
+                    // 認獻單狀態 = 已結束
+                    this.m_ToolUtilityClass.SetOptionSetAttribute(ref aDedicationBookingEntity, "new_dedication_booking_status", 100000002);
+                }
+                #endregion
                 if (aQryOrderPay.Status == "S" && aQryOrderPay.TSResultContent.Status == "S")
                 {
+                    #region 信用卡定期定額付款結果成功!
+                    // 認獻單備註 = 寫入成功的原因
+                    this.m_ToolUtilityClass.SetEntityStringAttribute(ref aDedicationBookingEntity, "new_explain", "信用卡定期定額付款結果成功!" + Environment.NewLine + this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_explain") + Environment.NewLine + "--------------------------------------" + Environment.NewLine + Description);
+
+                    // 更新認獻單
+                    this.m_ToolUtilityClass.UpdateEntity(ref aDedicationBookingEntity);
+
                     //if (this.m_ToolUtilityClass.GetEntityStringAttribute(aDedicationBookingEntity, "new_payment_records").Contains(aQryOrderPay.TSResultContent.OrderNo) != true && this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status") == 100000000)
                     if ( aQryOrderPay.TSResultContent.OrderNo != "" )
                     {
                         #region 信用卡會回傳2次，一次是RETURN_URL、一次是BACKEND_URL，為免收費單紀錄信用卡兩次，所以如果這裡已經有信用卡訂單編號，就不再處理了
 
-                        // LINE 通知付款人
-                        this.m_PushUtility.SendMessage(UserLineId, "信用卡付款結果成功!" + Environment.NewLine + Description);
+                        if (aQryOrderPay.Status == "S" && aQryOrderPay.TSResultContent.Status == "S")
+                        {
+                            // LINE 通知付款人
+                            this.m_PushUtility.SendMessage(UserLineId, "信用卡定期定額付款結果成功!" + Environment.NewLine + Description);
 
-                        return Json(new Dictionary<string, string>() { { "Status", "S" } });
-
+                            return Json(new Dictionary<string, string>() { { "Status", "S" } });
+                        }
                         #endregion
                     }
                     else
                     {
                         return Json(new Dictionary<string, string>() { { "Status", "S" } });
                     }
+                    #endregion
                 }
                 else
                 {
+                    #region 信用卡定期定額付款結果失敗!
+                    // 認獻單備註 = 寫入失敗的原因
+                    this.m_ToolUtilityClass.SetEntityStringAttribute(ref aDedicationBookingEntity, "new_explain", "信用卡定期定額付款結果失敗!" + Environment.NewLine + this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_explain") + Environment.NewLine + "--------------------------------------" + Environment.NewLine + Description);
+
+                    // 更新認獻單
+                    this.m_ToolUtilityClass.UpdateEntity(aDedicationBookingEntity);
+
                     // LINE 通知付款人
                     this.m_PushUtility.SendMessage(UserLineId, "信用卡付款結果失敗!" + Environment.NewLine + Description );
 
                     return Json(new Dictionary<string, string>() { { "Status", "S" } });
+                    #endregion
                 }
             }
             catch (System.Exception e)
