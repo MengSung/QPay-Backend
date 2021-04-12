@@ -128,7 +128,7 @@ namespace QPayBackend.Tools
                                      "日期     : " + DateTime.Now.ToLocalTime().ToString() + Environment.NewLine +
                                      "實收金額 : " + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() + Environment.NewLine +
                                      "付款方式 : " + "信用卡定期定額" + Environment.NewLine +
-                                     "總期數 : " + this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_total_stages") + Environment.NewLine +
+                                     "總期數   : " + this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_total_stages") + Environment.NewLine +
                                      "目前期數 : " + ProcessStageNumber(aQryOrderPay.TSResultContent.OrderNo) + Environment.NewLine +
                                      "程式呼叫 : " + aQryOrderPay.Description + Environment.NewLine +
                                      "交易結果 : " + aQryOrderPay.TSResultContent.Description + Environment.NewLine +
@@ -138,11 +138,11 @@ namespace QPayBackend.Tools
                 #region 建立收費單
                 CreateFee(aContact, aDedicationBookingEntity, aQryOrderPay, Description);
                 #endregion
-                #region 處理認獻單定期定額的第幾期字串
+                #region 處理認獻單定期定額的第幾期字串及認獻狀態
                 String StageNumber = ProcessStageNumber(aQryOrderPay.TSResultContent.OrderNo);
                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period", StageNumber);
 
-                if (Convert.ToUInt32(this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_total_stages")) > Convert.ToUInt32(StageNumber))
+                if (TransferToDeductTotalNum(this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_total_stages")) > Convert.ToUInt32(StageNumber.Replace("0", "")))
                 {
                     // 總期數大於目前期數
                     // 認獻單狀態 = 進行中
@@ -849,6 +849,24 @@ namespace QPayBackend.Tools
 
         }
 
+        private int TransferToDeductTotalNum(string DeductTotalNumber)
+        {
+            switch (DeductTotalNumber)
+            {
+                case "3個月":
+                    return 3;
+                case "6個月":
+                    return 6;
+                case "12個月":
+                    return 12;
+                case "18個月":
+                    return 18;
+                case "24個月":
+                    return 24;
+                default:
+                    return 0;
+            }
+        }
         #endregion
     }
 }
