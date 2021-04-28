@@ -67,6 +67,7 @@ namespace QPayBackend.Tools
                 {
                     m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
                     this.m_LineMessagingClient = new LineMessagingClient(ConvertOrganzitionToChannelAccessToken(aQryOrderPay.TSResultContent.Param2));
+                    //this.m_LineMessagingClient = new LineMessagingClient(CHANNEL_ACCESS_TOKEN);
                     m_PushUtility = new PushUtility(m_LineMessagingClient);
                 }
                 else
@@ -75,9 +76,9 @@ namespace QPayBackend.Tools
                 }
 
                 #region// 取得收費單
-                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "003");
+                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "003");
                 Entity aFeeEntity = this.m_ToolUtilityClass.RetrieveEntity("new_fee", new Guid(aQryOrderPay.TSResultContent.Param1));
-                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "004");
+                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "004");
                 #endregion
                 if (aFeeEntity != null)
                 {
@@ -89,7 +90,7 @@ namespace QPayBackend.Tools
                     // 現金已繳費 100000003
 
                     // 取得付款人
-                    ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "004");
+                    //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005");
 
                     Entity aContact = this.m_ToolUtilityClass.RetrieveEntity("contact", this.m_ToolUtilityClass.GetEntityLookupAttribute(aFeeEntity, "new_contact_new_fee"));
                     // 取得付款人姓名
@@ -227,10 +228,10 @@ namespace QPayBackend.Tools
                         else
                         {
                             // 處理帳號訂單 : ATM轉帳/匯款
-                            ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008");
+                            //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008");
                             if (this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status") == 100000000)
                             {
-                                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.1");
+                                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.1");
                                 #region// 付款狀態 等於 "新建立"
 
                                 // 收費單付款日期
@@ -248,7 +249,7 @@ namespace QPayBackend.Tools
                                 // 收費單說明
                                 String aOriginalDescription = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aFeeEntity, "new_description");
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", aOriginalDescription + Description);
-                                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.2");
+                                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.2");
                                 // 付款紀錄
                                 String aPaymentRecords =
                                         this.m_ToolUtilityClass.GetEntityStringAttribute(aFeeEntity, "new_payment_records") +
@@ -258,7 +259,7 @@ namespace QPayBackend.Tools
                                         Environment.NewLine;
                                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_payment_records", aPaymentRecords);
 
-                                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.3");
+                                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.3");
 
                                 if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("A"))
                                 {
@@ -293,6 +294,7 @@ namespace QPayBackend.Tools
                                 #endregion
 
                                 // LINE 通知付款人
+                                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.4 =>" + Description);
                                 this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description);
                                 #endregion
                             }

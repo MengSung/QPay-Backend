@@ -30,6 +30,8 @@ namespace QPayBackend.Tools
         public QPayAtmWebhook()
         {
             m_QPayProcessor = new QPayProcessor();
+            this.m_LineMessagingClient = new LineMessagingClient(CHANNEL_ACCESS_TOKEN);
+            m_PushUtility = new PushUtility(m_LineMessagingClient);
         }
         #endregion
         #region 釋放記憶體
@@ -68,47 +70,62 @@ namespace QPayBackend.Tools
             {
                 QryOrderPay aQryOrderPay = new QryOrderPay();
 
+                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001-QPayAtmWebhook : "+ aBackendPostData.ShopNo +"," + aBackendPostData.PayToken);
                 // 取得訂單
                 aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.ShopNo, aBackendPostData.PayToken);
                 //aQryOrderPay = m_QPayProcessor.OrderPayQuery( aBackendPostData.PayToken );
+                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001.1-QPayAtmWebhook : " + aBackendPostData.ShopNo + "," + aBackendPostData.PayToken);
 
                 if (aBackendPostData.ShopNo != null)
                 {
+                    //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "002-QPayAtmWebhook");
+
                     if (aQryOrderPay != null)
                     {
+                        //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "003-QPayAtmWebhook");
+
                         if (aQryOrderPay.TSResultContent.Param3 == "收費單")
                         {
+                            //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "004-QPayAtmWebhook");
+
                             QPayFeeProcessor aQPayFeeProcessor = new QPayFeeProcessor();
                             return aQPayFeeProcessor.QPayBackendUrl(aQryOrderPay);
                         }
                         else if (aQryOrderPay.TSResultContent.Param3 == "認獻單")
                         {
+                            //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005-QPayAtmWebhook");
+
                             QPayDedicationBookingProcessor aQPayDedicationBookingProcessor = new QPayDedicationBookingProcessor();
                             return aQPayDedicationBookingProcessor.QPayDedicationBookingProcessorReturnUrl(aQryOrderPay);
                         }
                         else
                         {
+                            //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "006-QPayAtmWebhook");
+
                             QPayFeeProcessor aQPayFeeProcessor = new QPayFeeProcessor();
                             return aQPayFeeProcessor.QPayBackendUrl(aQryOrderPay);
                         }
                     }
                     else
                     {
+                        //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "007-QPayAtmWebhook");
                         return Json(new Dictionary<string, string>() { { "Status", "S" } });
                     }
 
                 }
                 else
                 {
+                    //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008-QPayAtmWebhook");
                     return Json(new Dictionary<string, string>() { { "Status", "S" } });
                 }
             }
             catch (System.Exception e)
             {
                 String ErrorString = "ERROR : FullName = " + this.GetType().FullName.ToString() + " , Time = " + DateTime.Now.ToString() + " , Description = " + e.ToString();
+                
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, ErrorString);
 
-                m_PushUtility.SendMessage(MENGSUNG_LINE_ID, ErrorString);
-                //Monitor.Exit(this);
+                //m_PushUtility.SendMessage(MENGSUNG_LINE_ID, ErrorString);
                 throw e;
             }
         }
