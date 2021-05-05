@@ -180,7 +180,7 @@ namespace QPayBackend.Tools
                                     Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
 
                                     #region 報名狀態
-                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch")
+                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory")
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
@@ -277,7 +277,7 @@ namespace QPayBackend.Tools
                                     Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
 
                                     #region 報名狀態
-                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch")
+                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory")
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂 、 iM行動教會
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
