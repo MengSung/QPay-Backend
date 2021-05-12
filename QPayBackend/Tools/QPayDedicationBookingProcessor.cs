@@ -71,7 +71,6 @@ namespace QPayBackend.Tools
                     m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
                     this.m_LineMessagingClient = new LineMessagingClient(ConvertOrganzitionToChannelAccessToken(aQryOrderPay.TSResultContent.Param2));
                     m_PushUtility = new PushUtility(m_LineMessagingClient);
-                    return Json(new Dictionary<string, string>() { { "Status", "S" } });
                 }
                 else
                 {
@@ -199,6 +198,8 @@ namespace QPayBackend.Tools
                     return Json(new Dictionary<string, string>() { { "Status", "S" } });
                     #endregion
                 }
+
+                return Json(new Dictionary<string, string>() { { "Status", "S" } });
             }
             catch (System.Exception e)
             {
