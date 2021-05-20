@@ -11,6 +11,7 @@ namespace QPayBackend.Tools
 {
     public class QPayFeeProcessor : Controller, IDisposable
     {
+        //收費單
         #region 資料區
         private LineMessagingClient m_LineMessagingClient { get; set; }
 
