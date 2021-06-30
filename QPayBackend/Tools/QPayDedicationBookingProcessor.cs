@@ -284,7 +284,7 @@ namespace QPayBackend.Tools
                 String aPaymentRecords =
                         this.m_ToolUtilityClass.GetEntityStringAttribute(aFeeToCreated, "new_payment_records") +
                         DateTime.Now.ToString() +
-                        ": ReturnUrl => 信用卡訂單編號= " + aQryOrderPay.TSResultContent.OrderNo +
+                        ": BackendUrl => 信用卡訂單編號= " + aQryOrderPay.TSResultContent.OrderNo +
                         "，金額:" + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() +
                         Environment.NewLine;
 
