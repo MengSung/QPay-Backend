@@ -88,7 +88,24 @@ namespace QPayBackend.Tools
                     this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "沒找到認獻的例外處理");
                     return Json(new Dictionary<string, string>() { { "Status", "S" } });
                 }
-                else { }
+                else 
+                {
+                    #region 有找到認獻，然後要判斷是否已經有關連到此認獻的第001期收費單
+                    String aDedicationBookingName = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_name");
+
+                    //取得認獻單目前的期數
+                    String aPaidPeriod = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period");
+
+                    if (this.m_ToolUtilityClass.RetrieveFeeByFetchXml(aDedicationBookingName, aDedicationBookingEntity.Id.ToString(), "001").Entities.Count > 0 || aPaidPeriod == "001")
+                    {
+                        // 認獻單目前期數已經是 001
+                        // 或是:
+                        // 已經有001期的收費單了，就不再往下繼續執行了
+                        return Json(new Dictionary<string, string>() { { "Status", "S" } });
+                    }
+                    #endregion
+
+                }
                 #endregion
 
                 #endregion

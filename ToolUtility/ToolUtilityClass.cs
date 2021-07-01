@@ -3103,7 +3103,39 @@ namespace ToolUtilityNameSpace
                 throw e;
             }
         }
+        public EntityCollection RetrieveFeeByFetchXml(String DedicationBookingName, String DedicationBookingId, String PaidPeriod)
+        {
+            try
+            {
+                DedicationBookingName = @"'" + DedicationBookingName + @"'";
+                DedicationBookingId = @"'{" + DedicationBookingId + @"}'";
 
+                var fetchXml = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'>
+                          <entity name='new_fee'>
+                            <attribute name='new_feeid' />
+                            <attribute name='new_name' />
+                            <attribute name='createdon' />
+                            <order attribute='new_name' descending='false' />
+                            <filter type='and'>
+                              <condition attribute='new_dedication_booking_new_fee' operator='eq' uiname=" + DedicationBookingName + @" uitype ='new_dedication_booking' value=" + DedicationBookingId + @" />
+                              <condition attribute='new_paid_period' operator='eq' value='" + PaidPeriod + @"' />
+                            </filter>
+                          </entity>
+                        </fetch>";
+
+                RetrieveMultipleRequest fetchRequest1 = new RetrieveMultipleRequest
+                {
+                    Query = new FetchExpression(fetchXml)
+                };
+
+                return ((RetrieveMultipleResponse)this.m_OrganizationService.Execute(fetchRequest1)).EntityCollection;
+            }
+            catch (System.Exception e)
+            {
+                String ErrorString = "ERROR : FullName = " + this.GetType().FullName.ToString() + " , Time = " + DateTime.Now.ToString() + " , Description = " + e.ToString();
+                throw e;
+            }
+        }
         #endregion
         #endregion
         #region 實體操作區
