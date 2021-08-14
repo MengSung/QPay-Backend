@@ -96,24 +96,36 @@ namespace QPayBackend.Tools
                 else 
                 {
                     #region 有找到認獻，然後要判斷是否已經有關連到此認獻的第001期收費單
-                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005 找到認獻的例外處理");
-                    String aDedicationBookingName = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_name");
 
-                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "006 取得認獻單目前的期數");
+                    // 回傳回來的期數
+                    String StagePeriodNumber = ProcessStageNumber(aQryOrderPay.TSResultContent.OrderNo);
 
-                    //取得認獻單目前的期數
-                    String aPaidPeriod = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period");
-                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "007 取得認獻單目前的期數");
-
-                    if (this.m_ToolUtilityClass.RetrieveFeeByFetchXml(aDedicationBookingName, aDedicationBookingEntity.Id.ToString(), "001").Entities.Count > 0 || aPaidPeriod == "001")
+                    if ( StagePeriodNumber == "001")
                     {
-                        // 認獻單目前期數已經是 001
-                        // 或是:
-                        // 已經有001期的收費單了，就不再往下繼續執行了
-                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008 已經有001期的收費單了");
-                        return Json(new Dictionary<string, string>() { { "Status", "S" } });
+                        #region 回傳回來的期數，責任限單的期數不能為 001，收費單的期數也不能為 001
+                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005 找到認獻的例外處理");
+                        String aDedicationBookingName = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_name");
+
+                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "006 取得認獻單目前的期數");
+
+                        //取得認獻單目前的期數
+                        String aPaidPeriod = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period");
+                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "007 取得認獻單目前的期數");
+
+                        if (this.m_ToolUtilityClass.RetrieveFeeByFetchXml(aDedicationBookingName, aDedicationBookingEntity.Id.ToString(), "001").Entities.Count > 0 || aPaidPeriod == "001")
+                        {
+                            // 認獻單目前期數已經是 001
+                            // 或是:
+                            // 已經有001期的收費單了，就不再往下繼續執行了
+                            this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008 已經有001期的收費單了");
+
+                            // 這裡好像有問題
+                            return Json(new Dictionary<string, string>() { { "Status", "S" } });
+                        }
+                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "009 還沒有001期的收費單了");
+                        #endregion
                     }
-                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "009 還沒有001期的收費單了");
+                    else { }
                     #endregion
 
                 }
