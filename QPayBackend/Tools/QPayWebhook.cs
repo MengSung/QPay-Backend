@@ -93,7 +93,7 @@ namespace QPayBackend.Tools
                         }
                         else if (aQryOrderPay.TSResultContent.Param3 == "認獻單")
                         {
-                            //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005-QPayAtmWebhook");
+                            this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001 認獻單");
 
                             QPayDedicationBookingProcessor aQPayDedicationBookingProcessor = new QPayDedicationBookingProcessor();
                             return aQPayDedicationBookingProcessor.QPayDedicationBookingProcessorReturnUrl(aQryOrderPay);

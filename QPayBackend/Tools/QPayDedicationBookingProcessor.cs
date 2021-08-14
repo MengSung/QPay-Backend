@@ -69,47 +69,60 @@ namespace QPayBackend.Tools
                 #region 取得對應的教會組織
                 if ( aQryOrderPay.TSResultContent.Param2 != "" )
                 {
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001 取得對應的教會組織");
+
                     m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
                     this.m_LineMessagingClient = new LineMessagingClient(ConvertOrganzitionToChannelAccessToken(aQryOrderPay.TSResultContent.Param2));
                     m_PushUtility = new PushUtility(m_LineMessagingClient);
                 }
                 else
                 {
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "002 取得對應的教會組織");
+
                     return Json(new Dictionary<string, string>() { { "Status", "S" } });
                 }
                 #endregion
                 #region 處理取得認獻單
                 // 取得認獻
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "003 取得認獻");
                 Entity aDedicationBookingEntity = this.m_ToolUtilityClass.RetrieveEntity("new_dedication_booking", new Guid(aQryOrderPay.TSResultContent.Param1));
 
                 #region 沒找到認獻的例外處理
                 if ( aDedicationBookingEntity == null )
                 {
-                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "沒找到認獻的例外處理");
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "004 沒找到認獻的例外處理");
                     return Json(new Dictionary<string, string>() { { "Status", "S" } });
                 }
                 else 
                 {
                     #region 有找到認獻，然後要判斷是否已經有關連到此認獻的第001期收費單
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005 找到認獻的例外處理");
                     String aDedicationBookingName = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_name");
+
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "006 取得認獻單目前的期數");
 
                     //取得認獻單目前的期數
                     String aPaidPeriod = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period");
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "007 取得認獻單目前的期數");
 
                     if (this.m_ToolUtilityClass.RetrieveFeeByFetchXml(aDedicationBookingName, aDedicationBookingEntity.Id.ToString(), "001").Entities.Count > 0 || aPaidPeriod == "001")
                     {
                         // 認獻單目前期數已經是 001
                         // 或是:
                         // 已經有001期的收費單了，就不再往下繼續執行了
+                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008 已經有001期的收費單了");
                         return Json(new Dictionary<string, string>() { { "Status", "S" } });
                     }
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "009 還沒有001期的收費單了");
                     #endregion
 
                 }
                 #endregion
 
                 #endregion
-                #region 處理付款人
+                #region 處理付款人                   
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "010 處理付款人");
+
                 // 取得付款人
                 Entity aContact = this.m_ToolUtilityClass.RetrieveEntity("contact", this.m_ToolUtilityClass.GetEntityLookupAttribute(aDedicationBookingEntity, "new_contact_new_dedication_booking"));
                 // 取得付款人姓名
@@ -119,6 +132,8 @@ namespace QPayBackend.Tools
                 #region// 設定連絡人信用卡資訊
                 if (aQryOrderPay.TSResultContent.CCToken != "")
                 {
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "011 設定連絡人信用卡資訊");
+
                     String VisaInfo = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aContact, "new_visa_info");
 
                     if (IsCreditCardInList(aContact, aQryOrderPay) != true)
@@ -136,6 +151,7 @@ namespace QPayBackend.Tools
                         this.m_ToolUtilityClass.UpdateEntity(ref aContact);
                     }
                 }
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "012 設定連絡人信用卡資訊");
                 #endregion
                 #endregion
                 #region 收費單描述說明
@@ -153,9 +169,16 @@ namespace QPayBackend.Tools
                                      "--------------------" + Environment.NewLine;
                 #endregion
                 #region 建立收費單
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "013 建立收費單");
+
                 CreateFee(aContact, aDedicationBookingEntity, aQryOrderPay, Description);
+
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "014 建立收費單");
+
                 #endregion
                 #region 處理認獻單定期定額的第幾期字串及認獻狀態
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "015 處理認獻單定期定額的第幾期字串及認獻狀態");
+
                 String StageNumber = ProcessStageNumber(aQryOrderPay.TSResultContent.OrderNo);
                 this.m_ToolUtilityClass.SetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period", StageNumber);
 
@@ -179,7 +202,9 @@ namespace QPayBackend.Tools
                     this.m_ToolUtilityClass.SetEntityStringAttribute(ref aDedicationBookingEntity, "new_explain", "信用卡定期定額付款結果成功!" + Environment.NewLine + this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_explain") + Environment.NewLine + "--------------------------------------" + Environment.NewLine + Description);
 
                     // 更新認獻單
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "016 更新認獻單");
                     this.m_ToolUtilityClass.UpdateEntity(ref aDedicationBookingEntity);
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "017 更新認獻單");
 
                     //if (this.m_ToolUtilityClass.GetEntityStringAttribute(aDedicationBookingEntity, "new_payment_records").Contains(aQryOrderPay.TSResultContent.OrderNo) != true && this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status") == 100000000)
                     if ( aQryOrderPay.TSResultContent.OrderNo != "" )
@@ -241,14 +266,30 @@ namespace QPayBackend.Tools
                 SetFeeParameter(aContact, aFeeToCreated, aDedicationBookingEntity, aQryOrderPay, Description );
 
                 // 新增收費單
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001 建立收費單 => 新增收費單");
                 Guid aFeeId = this.m_ToolUtilityClass.CreateEntity(aFeeToCreated);
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "002 建立收費單 => 新增收費單");
                 Entity aRetrievedFee = this.m_ToolUtilityClass.RetrieveEntity("new_fee", aFeeId);
 
                 //指派負責人
-                if (aRetrievedFee != null && aContact != null)
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "003 建立收費單 => 指派負責人");
+
+                try
                 {
-                    this.m_ToolUtilityClass.AssignOwner("new_fee", aRetrievedFee, this.m_ToolUtilityClass.GetOwnerId(aContact));
+                    if (aRetrievedFee != null && aContact != null)
+                    {
+                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "004 建立收費單 => 指派負責人");
+                        this.m_ToolUtilityClass.AssignOwner("new_fee", aRetrievedFee, this.m_ToolUtilityClass.GetOwnerId(aContact));
+                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005 建立收費單 => 指派負責人");
+                    }
                 }
+                catch (System.Exception e)
+                {
+                    String ErrorString = "ERROR : FullName = " + this.GetType().FullName.ToString() + " , Time = " + DateTime.Now.ToString() + " , Description = " + e.ToString();
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "007 (永豐BackendUrl) 建立收費單 => 指派負責人" + ErrorString );
+                }
+
+                this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "006 建立收費單 => 新增收費單");
 
                 return aFeeId;
                 #endregion
