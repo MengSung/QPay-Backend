@@ -102,7 +102,7 @@ namespace QPayBackend.Tools
 
                     if ( StagePeriodNumber == "001")
                     {
-                        #region 回傳回來的期數，責任限單的期數不能為 001，收費單的期數也不能為 001
+                        #region 回傳回來的期數是001，則認獻單的期數不能為 001，收費單的期數也不能為 001，因為在ReturnUrl那裏就應該已經處理並產生好了
                         this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005 找到認獻的例外處理");
                         String aDedicationBookingName = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_name");
 
@@ -112,7 +112,7 @@ namespace QPayBackend.Tools
                         String aPaidPeriod = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period");
                         this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "007 取得認獻單目前的期數");
 
-                        if (this.m_ToolUtilityClass.RetrieveFeeByFetchXml(aDedicationBookingName, aDedicationBookingEntity.Id.ToString(), "001").Entities.Count > 0 || aPaidPeriod == "001")
+                        if ( this.m_ToolUtilityClass.RetrieveFeeByFetchXml(aDedicationBookingName, aDedicationBookingEntity.Id.ToString(), "001").Entities.Count > 0 || aPaidPeriod == "001" )
                         {
                             // 認獻單目前期數已經是 001
                             // 或是:
@@ -125,7 +125,11 @@ namespace QPayBackend.Tools
                         this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "009 還沒有001期的收費單了");
                         #endregion
                     }
-                    else { }
+                    else 
+                    {
+                        // 回傳回來的期數不是001
+
+                    }
                     #endregion
 
                 }
