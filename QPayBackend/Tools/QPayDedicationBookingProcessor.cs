@@ -92,8 +92,10 @@ namespace QPayBackend.Tools
                 #region 沒找到認獻的例外處理
                 if ( aDedicationBookingEntity == null )
                 {
+                    #region 沒找到認獻
                     this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "004 沒找到認獻的例外處理");
                     return Json(new Dictionary<string, string>() { { "Status", "S" } });
+                    #endregion
                 }
                 else 
                 {
