@@ -91,12 +91,16 @@ namespace QPayBackend.Tools
                             QPayFeeProcessor aQPayFeeProcessor = new QPayFeeProcessor();
                             return aQPayFeeProcessor.QPayBackendUrl(aQryOrderPay);
                         }
-                        else if (aQryOrderPay.TSResultContent.Param3 == "認獻單")
+                        else if ( aQryOrderPay.TSResultContent.Param3 == "認獻單")
                         {
-                            this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001 認獻單");
+                            this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001 認獻單" + "aBackendPostData.ShopNo=" + aBackendPostData.ShopNo+"aBackendPostData.PayToken=" + aBackendPostData.PayToken);
 
                             QPayDedicationBookingProcessor aQPayDedicationBookingProcessor = new QPayDedicationBookingProcessor();
+                            this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "002 認獻單");
+
                             return aQPayDedicationBookingProcessor.QPayDedicationBookingProcessorReturnUrl(aQryOrderPay);
+                            this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "003 認獻單");
+
                         }
                         else
                         {

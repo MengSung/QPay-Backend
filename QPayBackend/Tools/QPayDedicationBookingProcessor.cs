@@ -28,6 +28,8 @@ namespace QPayBackend.Tools
         #region 初始化
         public QPayDedicationBookingProcessor()
         {
+            this.m_LineMessagingClient = new LineMessagingClient(SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN);
+            m_PushUtility = new PushUtility(m_LineMessagingClient);
         }
 
         #region 釋放記憶體
