@@ -30,6 +30,7 @@ namespace Line.Messaging
         public LineMessagingClient(string channelAccessToken, string uri = DEFAULT_URI)
         {
             _client = new HttpClient();
+
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
             _jsonSerializerSettings = new CamelCaseJsonSerializerSettings();
             _uri = uri;
