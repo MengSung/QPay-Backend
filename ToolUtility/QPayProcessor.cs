@@ -54,6 +54,10 @@ namespace ToolUtilityNameSpace
                     // 音訊教會 SandBox
                     QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
                     return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
+                case "DA2890_001":
+                    // 忠孝路長老教會
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                    return "BDC962CCC8AB4AE2,946D46DBDDDE43E0,6038DFB03B4342AE,B1F64046CB2E44FC";
                 default:
                     QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
                     return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";

@@ -31,6 +31,10 @@ namespace Line.Messaging
         {
             _client = new HttpClient();
 
+            // 解決 : System.Net.WebException: 要求已經中止: 無法建立 SSL/TLS 的安全通道。
+            // 但是因為採用 .Net Core 1.3 所以就不需要了，只有事.Net Framework 4.5 以下才要用到
+            //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", channelAccessToken);
             _jsonSerializerSettings = new CamelCaseJsonSerializerSettings();
             _uri = uri;
