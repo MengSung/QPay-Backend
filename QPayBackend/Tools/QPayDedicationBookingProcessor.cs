@@ -89,7 +89,7 @@ namespace QPayBackend.Tools
                 this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "003 取得認獻");
                 Entity aDedicationBookingEntity = this.m_ToolUtilityClass.RetrieveEntity("new_dedication_booking", new Guid(aQryOrderPay.TSResultContent.Param1));
 
-                #region 沒找到認獻的例外處理
+                #region 處理重複的收費單問題，永豐會呼叫兩次以上
                 if ( aDedicationBookingEntity == null )
                 {
                     #region 沒找到認獻
@@ -99,41 +99,37 @@ namespace QPayBackend.Tools
                 }
                 else 
                 {
-                    #region 有找到認獻，然後要判斷是否已經有關連到此認獻的第001期收費單
+                    #region 有找到認獻，然後要判斷是否已經有關連到此認獻的第N期收費單
 
                     // 回傳回來的期數
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005-001 永豐呼叫取得收費單");
+
                     String StagePeriodNumber = ProcessStageNumber(aQryOrderPay.TSResultContent.OrderNo);
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005-002 永豐呼叫" + StagePeriodNumber + "收費單");
 
-                    if ( StagePeriodNumber == "001")
+                    #region 回傳回來的期數是N，則認獻單的期數不能為 N，收費單的期數也不能為 N，因為在ReturnUrl那裏就應該已經處理並產生好了
+
+                    String aDedicationBookingName = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_name");
+
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "006 取得認獻單的名稱=" + aDedicationBookingName);
+
+                    //取得認獻單目前的期數
+                    String aPaidPeriod = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period");
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "007 取得認獻單目前的期數=" + aPaidPeriod);
+
+                    if (this.m_ToolUtilityClass.RetrieveFeeByFetchXml(aDedicationBookingName, aDedicationBookingEntity.Id.ToString(), StagePeriodNumber).Entities.Count > 0 || aPaidPeriod == StagePeriodNumber)
                     {
-                        #region 回傳回來的期數是001，則認獻單的期數不能為 001，收費單的期數也不能為 001，因為在ReturnUrl那裏就應該已經處理並產生好了
-                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005 找到認獻的例外處理");
-                        String aDedicationBookingName = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_name");
+                        // 認獻單目前期數已經是 N
+                        // 或是:
+                        // 已經有N期的收費單了，就不再往下繼續執行了
+                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008 已經有" + StagePeriodNumber+"期的收費單了");
 
-                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "006 取得認獻單目前的期數");
-
-                        //取得認獻單目前的期數
-                        String aPaidPeriod = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_paid_period");
-                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "007 取得認獻單目前的期數");
-
-                        if ( this.m_ToolUtilityClass.RetrieveFeeByFetchXml(aDedicationBookingName, aDedicationBookingEntity.Id.ToString(), "001").Entities.Count > 0 || aPaidPeriod == "001" )
-                        {
-                            // 認獻單目前期數已經是 001
-                            // 或是:
-                            // 已經有001期的收費單了，就不再往下繼續執行了
-                            this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008 已經有001期的收費單了");
-
-                            // 這裡好像有問題
-                            return Json(new Dictionary<string, string>() { { "Status", "S" } });
-                        }
-                        this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "009 還沒有001期的收費單了");
-                        #endregion
+                        // 這裡好像有問題
+                        return Json(new Dictionary<string, string>() { { "Status", "S" } });
                     }
-                    else 
-                    {
-                        // 回傳回來的期數不是001
 
-                    }
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "009 還沒有" + StagePeriodNumber + "期的收費單了");
+                    #endregion
                     #endregion
 
                 }
