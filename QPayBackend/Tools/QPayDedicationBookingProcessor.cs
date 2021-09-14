@@ -102,12 +102,12 @@ namespace QPayBackend.Tools
                     #region 有找到認獻，然後要判斷是否已經有關連到此認獻的第N期收費單
 
                     // 回傳回來的期數
-                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005-001 永豐呼叫取得收費單");
+                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005-001 被永豐呼叫，取得收費單，訂單編號=" + aQryOrderPay.TSResultContent.OrderNo);
 
                     String StagePeriodNumber = ProcessStageNumber(aQryOrderPay.TSResultContent.OrderNo);
                     this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "005-002 永豐呼叫" + StagePeriodNumber + "收費單");
 
-                    #region 回傳回來的期數是N，則認獻單的期數不能為 N，收費單的期數也不能為 N，因為在ReturnUrl那裏就應該已經處理並產生好了
+                    #region 回傳回來的期數是N，則認獻單的期數不能為 N，收費單的期數也不能為 N
 
                     String aDedicationBookingName = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aDedicationBookingEntity, "new_name");
 
