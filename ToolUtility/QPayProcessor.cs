@@ -58,6 +58,10 @@ namespace ToolUtilityNameSpace
                     // 忠孝路長老教會
                     QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
                     return "BDC962CCC8AB4AE2,946D46DBDDDE43E0,6038DFB03B4342AE,B1F64046CB2E44FC";
+                case "DA3033_001":
+                    // 東湖禮拜堂
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                    return "4B1657DE6F3547A3,3AB478872D0A49C7,0748F400DD834C07,6506CD86B0174396";
                 default:
                     QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
                     return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
