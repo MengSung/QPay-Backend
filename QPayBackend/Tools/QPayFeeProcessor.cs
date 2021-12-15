@@ -181,7 +181,7 @@ namespace QPayBackend.Tools
                                     Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
 
                                     #region 報名狀態
-                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch")
+                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch" || aQryOrderPay.TSResultContent.Param2 == "apbolc")
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
@@ -278,7 +278,7 @@ namespace QPayBackend.Tools
                                     Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
 
                                     #region 報名狀態
-                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch")
+                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch" || aQryOrderPay.TSResultContent.Param2 == "apbolc")
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂 、 iM行動教會
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
@@ -415,6 +415,12 @@ namespace QPayBackend.Tools
                 case "dhchurchback":
                     // 東湖禮拜堂(公司研發)
                     return @"r+RzvGNqCqcPo4LOF2LFjvvjfVmQBR+pQH6i7RkyWHB/n0v2xCwgXbZRO3UeT+Ut0JleZ3L9NKVvd2sgblcUoVeuC3VKyiC5aQR++2p7aqV2B5RGxc6RV7A5k34Q57KOeqN8mAlYd9TOY6xs06pbIwdB04t89/1O/w1cDnyilFU=";
+                case "apbolc":
+                    // 安平靈糧堂(雲端機房)
+                    return @"MwTnnrBtGgUaj+ZfbiKx7dxYxIuJKBmX9PLwKcRQU+VG4u0Gvyv2VeIjmNOr3pVGfH4JizB2wNbT0K0c4pT/XXCoBpK3lMQGaRAfS0FMoy05WDFQJgTL7etz9BHrzzWL6j0aFfutv6F4sMvcAdkTPgdB04t89/1O/w1cDnyilFU=";
+                case "apbolcback":
+                    // 安平靈糧堂(公司研發)
+                    return @"MwTnnrBtGgUaj+ZfbiKx7dxYxIuJKBmX9PLwKcRQU+VG4u0Gvyv2VeIjmNOr3pVGfH4JizB2wNbT0K0c4pT/XXCoBpK3lMQGaRAfS0FMoy05WDFQJgTL7etz9BHrzzWL6j0aFfutv6F4sMvcAdkTPgdB04t89/1O/w1cDnyilFU=";
                 default:
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
