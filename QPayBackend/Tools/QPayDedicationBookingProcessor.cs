@@ -78,10 +78,15 @@ namespace QPayBackend.Tools
                         // 不是以利亞之家的收費單，則是正常的去應到該組織
                         m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
                     }
+                    else if(aQryOrderPay.TSResultContent.Param2 == "elijah")
+                    {
+                        // 是以利亞之家的收費單，要到楊梅靈糧堂的組織去找，因為是多機器人
+                        m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "ymllc");
+                    }
                     else
                     {
-                        // 以利亞之家的收費單，要到楊梅靈糧堂的組織去找，因為是多機器人
-                        m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "ymllcback");
+                        // 不是以利亞之家的收費單，則是正常的去應到該組織
+                        m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
                     }
 
                     if (aQryOrderPay.TSResultContent.Param2 != null)
