@@ -23,7 +23,7 @@ namespace QPayBackend.Tools
         private const String MENGSUNG_LINE_ID = @"U7638e4ed509708a3573ba6d69970583d";
 
         // 音訊教會-雲端除錯用
-        private const String CHANNEL_ACCESS_TOKEN = @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
+        private const String SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN = @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
         #endregion
         #region 初始化
         public QPayFeeProcessor()
@@ -66,10 +66,39 @@ namespace QPayBackend.Tools
             {
                 if (aQryOrderPay.TSResultContent.Param2 != "")
                 {
-                    m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
-                    this.m_LineMessagingClient = new LineMessagingClient(ConvertOrganzitionToChannelAccessToken(aQryOrderPay.TSResultContent.Param2));
-                    //this.m_LineMessagingClient = new LineMessagingClient(CHANNEL_ACCESS_TOKEN);
-                    m_PushUtility = new PushUtility(m_LineMessagingClient);
+                    if (aQryOrderPay.TSResultContent.Param2 != "elijah")
+                    {
+                        // 不是以利亞之家的收費單，則是正常的去應到該組織
+                        m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
+                    }
+                    else
+                    {
+                        // 以利亞之家的收費單，要到楊梅靈糧堂的組織去找，因為是多機器人
+                        m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "ymllcback");
+                    }
+
+                    if (aQryOrderPay.TSResultContent.Param2 != null)
+                    {
+                        // aQryOrderPay.TSResultContent.Param2 有值
+                        if (aQryOrderPay.TSResultContent.Param2 != "")
+                        {
+                            // aQryOrderPay.TSResultContent.Param2 不是空白
+                            this.m_LineMessagingClient = new LineMessagingClient(ConvertOrganzitionToChannelAccessToken(aQryOrderPay.TSResultContent.Param2));
+                            m_PushUtility = new PushUtility(m_LineMessagingClient);
+                        }
+                        else
+                        {
+                            // aQryOrderPay.TSResultContent.Param2 是空白
+                            this.m_LineMessagingClient = new LineMessagingClient(SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN);
+                            m_PushUtility = new PushUtility(m_LineMessagingClient);
+                        }
+                    }
+                    else
+                    {
+                        // aQryOrderPay.TSResultContent.Param2 沒值
+                        this.m_LineMessagingClient = new LineMessagingClient(SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN);
+                        m_PushUtility = new PushUtility(m_LineMessagingClient);
+                    }
                 }
                 else
                 {
@@ -466,6 +495,9 @@ namespace QPayBackend.Tools
                 case "wenhuaback":
                     // 門諾會文華教會(公司研發)
                     return @"k47IhUUf2NfKzQAu7HBCWIMKNM6kpIa+rQfOTocJKffEpycaToDCYBtU9pb6nRkkTjMF1UytdkiJ9SwnlrGbHZwlB0JQ47ek/q5cMwH3K74NOZD8PnjfmgtYtNeyxWFS6FNBfq272oQCadb5MPAY6gdB04t89/1O/w1cDnyilFU=";
+                case "elijah":
+                    // 以利亞之家
+                    return @"EIDRTDTCV+mEPYMF+9QH3A7gG8K1byzBAcCa5baMwy1SpQzBpwekVlsbUDQw9I3X/8f3wAW7oV6dpr4Li0uNMrIBJ0izPbQHoUOMA5NfJEPPaNK5LHdUAdk8myEDo5kGKh8fX4qk8qp0Hq54QRFMqgdB04t89/1O/w1cDnyilFU=";
                 default:
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }

@@ -28,8 +28,8 @@ namespace QPayBackend.Tools
         #region 初始化
         public QPayDedicationBookingProcessor()
         {
-            this.m_LineMessagingClient = new LineMessagingClient(SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN);
-            m_PushUtility = new PushUtility(m_LineMessagingClient);
+            //this.m_LineMessagingClient = new LineMessagingClient(SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN);
+            //m_PushUtility = new PushUtility(m_LineMessagingClient);
         }
 
         #region 釋放記憶體
@@ -73,9 +73,39 @@ namespace QPayBackend.Tools
                 {
                     this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001 取得對應的教會組織" + aQryOrderPay.TSResultContent.Param2);
 
-                    m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
-                    //this.m_LineMessagingClient = new LineMessagingClient(ConvertOrganzitionToChannelAccessToken(aQryOrderPay.TSResultContent.Param2));
-                    m_PushUtility = new PushUtility(m_LineMessagingClient);
+                    if (aQryOrderPay.TSResultContent.Param2 != "elijah")
+                    {
+                        // 不是以利亞之家的收費單，則是正常的去應到該組織
+                        m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
+                    }
+                    else
+                    {
+                        // 以利亞之家的收費單，要到楊梅靈糧堂的組織去找，因為是多機器人
+                        m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "ymllcback");
+                    }
+
+                    if (aQryOrderPay.TSResultContent.Param2 != null)
+                    {
+                        // aQryOrderPay.TSResultContent.Param2 有值
+                        if (aQryOrderPay.TSResultContent.Param2 != "")
+                        {
+                            // aQryOrderPay.TSResultContent.Param2 不是空白
+                            this.m_LineMessagingClient = new LineMessagingClient(ConvertOrganzitionToChannelAccessToken(aQryOrderPay.TSResultContent.Param2));
+                            m_PushUtility = new PushUtility(m_LineMessagingClient);
+                        }
+                        else
+                        {
+                            // aQryOrderPay.TSResultContent.Param2 是空白
+                            this.m_LineMessagingClient = new LineMessagingClient(SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN);
+                            m_PushUtility = new PushUtility(m_LineMessagingClient);
+                        }
+                    }
+                    else
+                    {
+                        // aQryOrderPay.TSResultContent.Param2 沒值
+                        this.m_LineMessagingClient = new LineMessagingClient(SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN);
+                        m_PushUtility = new PushUtility(m_LineMessagingClient);
+                    }
                 }
                 else
                 {
@@ -426,6 +456,71 @@ namespace QPayBackend.Tools
 
                 //Monitor.Exit(this);
                 throw e;
+            }
+        }
+        #endregion
+        #region 商店代號對應區
+        private string ConvertOrganzitionToChannelAccessToken(String Organzition)
+        {
+            //客製化
+            switch (Organzition)
+            {
+                case "yhchurchback":
+                    // 永和禮拜堂(公司研發)
+                    return @"Z821JyND95uiABqED/bwOcTyCkHMcp92JBDYJn/oefwaIseWFyLSDKtTeB+SqMI1kquELAvJ7TSN+EDhl7WGgfFLgT9zehh8+3ocAQEKmfCzTzio5xoHKxfQzrvlXmCtp7wfm4vuPT33dr7tBJrkOAdB04t89/1O/w1cDnyilFU=";
+                case "yhchurch":
+                    // 永和禮拜堂(雲端機房)
+                    return @"HeuLkSEF5CX7hdZo4956IPpgJNdb8VqRZeL1Gu37kFFm+1F7DObAGjfeVYaggzwjZ5H4qraesvquODt7Y81jbtspNZkEq5n3oLDG+G32xQsRx1jCobkABL/Z7RKjkSACNT6h72bPQXsVn9aCuI5OogdB04t89/1O/w1cDnyilFU=";
+                case "chunghsiaochurch":
+                    // 忠孝路長老教會(公司研發)
+                    return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
+                case "chunghsiao":
+                    // 忠孝路長老教會(雲端機房)
+                    return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
+                case "jesus":
+                    // 音訊教會
+                    return @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
+                case "imchurch":
+                    // iM行動教會
+                    return @"XwSRWX0RxTtTvY/N6QZQ9YElOMH3OAxBf/3DAmWoXbIK3ymBsXEaU54owfdbPTQiQJPd10cWjC+JIWX6EvOCTbBdHmmJNC6xOOaioB91gPJPyDpl0IHQOQAzLA9J21zZ83SgIF6JwJbxC/8tSXv6RgdB04t89/1O/w1cDnyilFU=";
+                case "imchurchback":
+                    // iM行動教會(公司研發)
+                    return @"YJ1LKtDZyfHwfkbqeHAk+pxNJNZBpOvI446h3brWHDqquFc2ElUCYaseqiW+pAKhwJspguAgGbOlKDymSjSTMydJn7JeY6CRmeyC2Am7urM3CNVNq/2JzAuQ2Vqc7lhPWx8qX5YxS3ve4NjcDceymQdB04t89/1O/w1cDnyilFU=";
+                case "thevictory":
+                    // 得勝靈糧堂(雲端機房)
+                    return @"dhWNUj4LOTQFl10j0nvn+7/O3ffZkqfBz5+H6WKGoktwTpu32T+rdJYUfDSvT8HRz+VNkRcbttdJ74d81MecfD/q8AuUK5fhi8/eL9xFnDZBCCqLGP6q9lcZjvleoUXxN/OVfd2kcU3C4jk7sUP8pwdB04t89/1O/w1cDnyilFU=";
+                case "thevictoryback":
+                    // 得勝靈糧堂(公司研發)
+                    return @"dhWNUj4LOTQFl10j0nvn+7/O3ffZkqfBz5+H6WKGoktwTpu32T+rdJYUfDSvT8HRz+VNkRcbttdJ74d81MecfD/q8AuUK5fhi8/eL9xFnDZBCCqLGP6q9lcZjvleoUXxN/OVfd2kcU3C4jk7sUP8pwdB04t89/1O/w1cDnyilFU=";
+                case "dhchurch":
+                    // 東湖禮拜堂(雲端機房)
+                    return @"r+RzvGNqCqcPo4LOF2LFjvvjfVmQBR+pQH6i7RkyWHB/n0v2xCwgXbZRO3UeT+Ut0JleZ3L9NKVvd2sgblcUoVeuC3VKyiC5aQR++2p7aqV2B5RGxc6RV7A5k34Q57KOeqN8mAlYd9TOY6xs06pbIwdB04t89/1O/w1cDnyilFU=";
+                case "dhchurchback":
+                    // 東湖禮拜堂(公司研發)
+                    return @"r+RzvGNqCqcPo4LOF2LFjvvjfVmQBR+pQH6i7RkyWHB/n0v2xCwgXbZRO3UeT+Ut0JleZ3L9NKVvd2sgblcUoVeuC3VKyiC5aQR++2p7aqV2B5RGxc6RV7A5k34Q57KOeqN8mAlYd9TOY6xs06pbIwdB04t89/1O/w1cDnyilFU=";
+                case "ymllc":
+                    // 楊梅靈糧堂(雲端機房)
+                    return @"VrrLlxYzHXBTIWg+dK3zfSStpjaKq+I4CtIMzHvl1DRKlPtvNQuIGafYkna6Am2Eic2lR5/mR6D4XatoGnFQrs6nWaZDEkMWBXycxkpNP5SSvIm11brm0yA/E8EHFJCA7zY66wmrD8jzJ0xNRMmy9wdB04t89/1O/w1cDnyilFU=";
+                case "ymllcback":
+                    // 楊梅靈糧堂(公司研發)
+                    return @"chsZDHgMK4gMAR/ynoxtwqZVYpIG2lBJOaxmRcwQEuvIBM7n+fuPDQOkokootLtuaiPFu06dE+PzvXRhNfksu/AypG5fJYIBlrF8lI9e/gpLJoO9SRkfpf8NigDK56dTu+raRbFSPn2sD1w2NJbipwdB04t89/1O/w1cDnyilFU=";
+                case "apbolc":
+                    // 安平靈糧堂(雲端機房)
+                    return @"MwTnnrBtGgUaj+ZfbiKx7dxYxIuJKBmX9PLwKcRQU+VG4u0Gvyv2VeIjmNOr3pVGfH4JizB2wNbT0K0c4pT/XXCoBpK3lMQGaRAfS0FMoy05WDFQJgTL7etz9BHrzzWL6j0aFfutv6F4sMvcAdkTPgdB04t89/1O/w1cDnyilFU=";
+                case "apbolcback":
+                    // 安平靈糧堂(公司研發)
+                    return @"MwTnnrBtGgUaj+ZfbiKx7dxYxIuJKBmX9PLwKcRQU+VG4u0Gvyv2VeIjmNOr3pVGfH4JizB2wNbT0K0c4pT/XXCoBpK3lMQGaRAfS0FMoy05WDFQJgTL7etz9BHrzzWL6j0aFfutv6F4sMvcAdkTPgdB04t89/1O/w1cDnyilFU=";
+                case "wenhua":
+                    // 門諾會文華教會(雲端機房)
+                    return @"k47IhUUf2NfKzQAu7HBCWIMKNM6kpIa+rQfOTocJKffEpycaToDCYBtU9pb6nRkkTjMF1UytdkiJ9SwnlrGbHZwlB0JQ47ek/q5cMwH3K74NOZD8PnjfmgtYtNeyxWFS6FNBfq272oQCadb5MPAY6gdB04t89/1O/w1cDnyilFU=";
+                case "wenhuaback":
+                    // 門諾會文華教會(公司研發)
+                    return @"k47IhUUf2NfKzQAu7HBCWIMKNM6kpIa+rQfOTocJKffEpycaToDCYBtU9pb6nRkkTjMF1UytdkiJ9SwnlrGbHZwlB0JQ47ek/q5cMwH3K74NOZD8PnjfmgtYtNeyxWFS6FNBfq272oQCadb5MPAY6gdB04t89/1O/w1cDnyilFU=";
+                case "elijah":
+                    // 以利亞之家
+                    return @"EIDRTDTCV+mEPYMF+9QH3A7gG8K1byzBAcCa5baMwy1SpQzBpwekVlsbUDQw9I3X/8f3wAW7oV6dpr4Li0uNMrIBJ0izPbQHoUOMA5NfJEPPaNK5LHdUAdk8myEDo5kGKh8fX4qk8qp0Hq54QRFMqgdB04t89/1O/w1cDnyilFU=";
+                default:
+                    return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
         }
         #endregion
