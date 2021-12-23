@@ -491,6 +491,12 @@ namespace QPayBackend.Tools
                 case "apbolcback":
                     // 安平靈糧堂(公司研發)
                     return @"MwTnnrBtGgUaj+ZfbiKx7dxYxIuJKBmX9PLwKcRQU+VG4u0Gvyv2VeIjmNOr3pVGfH4JizB2wNbT0K0c4pT/XXCoBpK3lMQGaRAfS0FMoy05WDFQJgTL7etz9BHrzzWL6j0aFfutv6F4sMvcAdkTPgdB04t89/1O/w1cDnyilFU=";
+                case "ymllc":
+                    // 楊梅靈糧堂(雲端機房)
+                    return @"VrrLlxYzHXBTIWg+dK3zfSStpjaKq+I4CtIMzHvl1DRKlPtvNQuIGafYkna6Am2Eic2lR5/mR6D4XatoGnFQrs6nWaZDEkMWBXycxkpNP5SSvIm11brm0yA/E8EHFJCA7zY66wmrD8jzJ0xNRMmy9wdB04t89/1O/w1cDnyilFU=";
+                case "ymllcback":
+                    // 楊梅靈糧堂(公司研發)
+                    return @"chsZDHgMK4gMAR/ynoxtwqZVYpIG2lBJOaxmRcwQEuvIBM7n+fuPDQOkokootLtuaiPFu06dE+PzvXRhNfksu/AypG5fJYIBlrF8lI9e/gpLJoO9SRkfpf8NigDK56dTu+raRbFSPn2sD1w2NJbipwdB04t89/1O/w1cDnyilFU=";
                 default:
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }

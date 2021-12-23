@@ -181,7 +181,7 @@ namespace QPayBackend.Tools
                                     Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
 
                                     #region 報名狀態
-                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch" || aQryOrderPay.TSResultContent.Param2 == "apbolc")
+                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch" || aQryOrderPay.TSResultContent.Param2 == "ymllc" || aQryOrderPay.TSResultContent.Param2 == "ymllcback" || aQryOrderPay.TSResultContent.Param2 == "apbolc" || aQryOrderPay.TSResultContent.Param2 == "apbolcback" || aQryOrderPay.TSResultContent.Param2 == "wenhua" || aQryOrderPay.TSResultContent.Param2 == "wenhuaback")
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
@@ -220,8 +220,46 @@ namespace QPayBackend.Tools
                                 }
                                 #endregion
 
-                                // LINE 通知付款人
-                                this.m_PushUtility.SendMessage(UserLineId, "信用卡付款結果成功!" + Environment.NewLine + Description);
+                                #region LINE 通知付款人
+                                // 取得收費單的課程Lookup是否有值
+                                Guid aDiscipleLessonsId = this.m_ToolUtilityClass.GetEntityLookupAttribute(ref aFeeEntity, "new_disciple_lessons_new_fee");
+
+                                if (aDiscipleLessonsId == Guid.Empty)
+                                {
+                                    // 收費單的課程Lookup沒有值
+                                    this.m_PushUtility.SendMessage(UserLineId, "信用卡付款結果成功!" + Environment.NewLine + Description);
+                                }
+                                else
+                                {
+                                    // 收費單的課程Lookup有值
+                                    // 取得該課程
+                                    Entity aDiscipleLessonsEntity = this.m_ToolUtilityClass.RetrieveEntity("new_disciple_lessons", aDiscipleLessonsId);
+
+                                    if (aDiscipleLessonsEntity != null)
+                                    {
+                                        // 有取得該課程
+
+                                        // 取得Line群組邀請網址
+                                        String LineGroupInviteAddress = this.m_ToolUtilityClass.GetEntityStringAttribute(aDiscipleLessonsEntity, "new_line_group_invite_address");
+
+                                        if (LineGroupInviteAddress == "")
+                                        {
+                                            // 沒有Line群組邀請網址
+                                            this.m_PushUtility.SendMessage(UserLineId, "信用卡付款結果成功!" + Environment.NewLine + Description);
+                                        }
+                                        else
+                                        {
+                                            // 有Line群組邀請網址
+                                            this.m_PushUtility.SendMessage(UserLineId, "信用卡付款結果成功!" + Environment.NewLine + Description + Environment.NewLine + "並且請點擊連結，加入Line群組" + Environment.NewLine + LineGroupInviteAddress);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // 沒有取得該課程
+                                        this.m_PushUtility.SendMessage(UserLineId, "信用卡付款結果成功!" + Environment.NewLine + Description);
+                                    }
+                                }
+                                #endregion
                                 #endregion
                                 #endregion
                             }
@@ -278,7 +316,7 @@ namespace QPayBackend.Tools
                                     Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
 
                                     #region 報名狀態
-                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch" || aQryOrderPay.TSResultContent.Param2 == "apbolc")
+                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch" || aQryOrderPay.TSResultContent.Param2 == "ymllc" || aQryOrderPay.TSResultContent.Param2 == "ymllcback" || aQryOrderPay.TSResultContent.Param2 == "apbolc" || aQryOrderPay.TSResultContent.Param2 == "apbolcback" || aQryOrderPay.TSResultContent.Param2 == "wenhua" || aQryOrderPay.TSResultContent.Param2 == "wenhuaback")
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂 、 iM行動教會
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
@@ -294,9 +332,47 @@ namespace QPayBackend.Tools
                                 }
                                 #endregion
 
-                                // LINE 通知付款人
-                                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.4 =>" + Description);
-                                this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description);
+                                #region LINE 通知付款人
+                                // 取得收費單的課程Lookup是否有值
+                                Guid aDiscipleLessonsId = this.m_ToolUtilityClass.GetEntityLookupAttribute(ref aFeeEntity, "new_disciple_lessons_new_fee");
+
+                                if (aDiscipleLessonsId == Guid.Empty)
+                                {
+                                    // 收費單的課程Lookup沒有值
+                                    this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description);
+                                }
+                                else
+                                {
+                                    // 收費單的課程Lookup有值
+                                    // 取得該課程
+                                    Entity aDiscipleLessonsEntity = this.m_ToolUtilityClass.RetrieveEntity("new_disciple_lessons", aDiscipleLessonsId);
+
+                                    if (aDiscipleLessonsEntity != null)
+                                    {
+                                        // 有取得該課程
+
+                                        // 取得Line群組邀請網址
+                                        String LineGroupInviteAddress = this.m_ToolUtilityClass.GetEntityStringAttribute(aDiscipleLessonsEntity, "new_line_group_invite_address");
+
+                                        if (LineGroupInviteAddress == "")
+                                        {
+                                            // 沒有Line群組邀請網址
+                                            this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description);
+                                        }
+                                        else
+                                        {
+                                            // 有Line群組邀請網址
+                                            this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description + Environment.NewLine + "並且請點擊連結，加入Line群組" + Environment.NewLine + LineGroupInviteAddress);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // 沒有取得該課程
+                                        this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description);
+                                    }
+                                }
+                                #endregion
+
                                 #endregion
                             }
                         }
@@ -341,7 +417,7 @@ namespace QPayBackend.Tools
                 case "NA0149_001":
                     //return "chunghsiaochurch";
                     //return "yhchurchback";
-                    return "jesus";
+                    return "ymllcback";
                 case "DA1626_001":
                     return "yhchurch";
                 case "DA2424_001":
@@ -415,12 +491,24 @@ namespace QPayBackend.Tools
                 case "dhchurchback":
                     // 東湖禮拜堂(公司研發)
                     return @"r+RzvGNqCqcPo4LOF2LFjvvjfVmQBR+pQH6i7RkyWHB/n0v2xCwgXbZRO3UeT+Ut0JleZ3L9NKVvd2sgblcUoVeuC3VKyiC5aQR++2p7aqV2B5RGxc6RV7A5k34Q57KOeqN8mAlYd9TOY6xs06pbIwdB04t89/1O/w1cDnyilFU=";
+                case "ymllc":
+                    // 楊梅靈糧堂(雲端機房)
+                    return @"VrrLlxYzHXBTIWg+dK3zfSStpjaKq+I4CtIMzHvl1DRKlPtvNQuIGafYkna6Am2Eic2lR5/mR6D4XatoGnFQrs6nWaZDEkMWBXycxkpNP5SSvIm11brm0yA/E8EHFJCA7zY66wmrD8jzJ0xNRMmy9wdB04t89/1O/w1cDnyilFU=";
+                case "ymllcback":
+                    // 楊梅靈糧堂(公司研發)
+                    return @"chsZDHgMK4gMAR/ynoxtwqZVYpIG2lBJOaxmRcwQEuvIBM7n+fuPDQOkokootLtuaiPFu06dE+PzvXRhNfksu/AypG5fJYIBlrF8lI9e/gpLJoO9SRkfpf8NigDK56dTu+raRbFSPn2sD1w2NJbipwdB04t89/1O/w1cDnyilFU=";
                 case "apbolc":
                     // 安平靈糧堂(雲端機房)
                     return @"MwTnnrBtGgUaj+ZfbiKx7dxYxIuJKBmX9PLwKcRQU+VG4u0Gvyv2VeIjmNOr3pVGfH4JizB2wNbT0K0c4pT/XXCoBpK3lMQGaRAfS0FMoy05WDFQJgTL7etz9BHrzzWL6j0aFfutv6F4sMvcAdkTPgdB04t89/1O/w1cDnyilFU=";
                 case "apbolcback":
                     // 安平靈糧堂(公司研發)
                     return @"MwTnnrBtGgUaj+ZfbiKx7dxYxIuJKBmX9PLwKcRQU+VG4u0Gvyv2VeIjmNOr3pVGfH4JizB2wNbT0K0c4pT/XXCoBpK3lMQGaRAfS0FMoy05WDFQJgTL7etz9BHrzzWL6j0aFfutv6F4sMvcAdkTPgdB04t89/1O/w1cDnyilFU=";
+                case "wenhua":
+                    // 門諾會文華教會(雲端機房)
+                    return @"k47IhUUf2NfKzQAu7HBCWIMKNM6kpIa+rQfOTocJKffEpycaToDCYBtU9pb6nRkkTjMF1UytdkiJ9SwnlrGbHZwlB0JQ47ek/q5cMwH3K74NOZD8PnjfmgtYtNeyxWFS6FNBfq272oQCadb5MPAY6gdB04t89/1O/w1cDnyilFU=";
+                case "wenhuaback":
+                    // 門諾會文華教會(公司研發)
+                    return @"k47IhUUf2NfKzQAu7HBCWIMKNM6kpIa+rQfOTocJKffEpycaToDCYBtU9pb6nRkkTjMF1UytdkiJ9SwnlrGbHZwlB0JQ47ek/q5cMwH3K74NOZD8PnjfmgtYtNeyxWFS6FNBfq272oQCadb5MPAY6gdB04t89/1O/w1cDnyilFU=";
                 default:
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
