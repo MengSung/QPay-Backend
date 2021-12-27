@@ -71,7 +71,7 @@ namespace QPayBackend.Tools
                 #region 取得對應的教會組織
                 if ( aQryOrderPay.TSResultContent.Param2 != "" )
                 {
-                    this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001 取得對應的教會組織" + aQryOrderPay.TSResultContent.Param2);
+                    //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001 取得對應的教會組織" + aQryOrderPay.TSResultContent.Param2);
 
                     if (aQryOrderPay.TSResultContent.Param2 != "elijah")
                     {
