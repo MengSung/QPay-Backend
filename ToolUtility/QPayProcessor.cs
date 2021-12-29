@@ -62,6 +62,23 @@ namespace ToolUtilityNameSpace
                     // 東湖禮拜堂
                     QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
                     return "4B1657DE6F3547A3,3AB478872D0A49C7,0748F400DD834C07,6506CD86B0174396";
+                case "DA3190_001":
+                    // 楊梅靈糧堂
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                    String A11 = "1E582BECE43F421A";
+                    String A12 = "8F6ACB29B8EF4C67";
+                    String B11 = "8C06D1D49C544C51";
+                    String B12 = "041D9136AA9647F2";
+                    return A11 + "," + A12 + "," + B11 + "," + B12;
+
+                case "DA3189_001":
+                    // 以利亞之家
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                    String A21 = "A88FB80292D6420D";
+                    String A22 = "3844DD3B214D487C";
+                    String B21 = "27BC1983D2914C11";
+                    String B22 = "32D5A23910734C93";
+                    return A21 + "," + A22 + "," + B21 + "," + B22;
                 default:
                     QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
                     return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";

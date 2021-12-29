@@ -82,6 +82,7 @@ namespace QPayBackend.Tools
                         m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
                     }
 
+                    #region 建立通知用的 LineMessagingClient
                     if (aQryOrderPay.TSResultContent.Param2 != null)
                     {
                         // aQryOrderPay.TSResultContent.Param2 有值
@@ -104,6 +105,7 @@ namespace QPayBackend.Tools
                         this.m_LineMessagingClient = new LineMessagingClient(SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN);
                         m_PushUtility = new PushUtility(m_LineMessagingClient);
                     }
+                    #endregion
                 }
                 else
                 {
@@ -424,8 +426,6 @@ namespace QPayBackend.Tools
                         this.m_PushUtility.SendMessage(UserLineId, "付款失敗!" + Environment.NewLine + Description);
                     }
                 }
-
-                ////this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "009");
 
                 return Json(new Dictionary<string, string>() { { "Status", "S" } });
             }
