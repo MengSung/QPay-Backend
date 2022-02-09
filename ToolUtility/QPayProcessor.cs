@@ -35,6 +35,11 @@ namespace ToolUtilityNameSpace
         #region 永豐金流工具區
         private string ConvertShopNoToHashCodeAndSite(String aShopNo)
         {
+            String A21 = "";
+            String A22 = "";
+            String B21 = "";
+            String B22 = "";
+
             //客製化
             switch (aShopNo)
             {
@@ -70,14 +75,21 @@ namespace ToolUtilityNameSpace
                     String B11 = "8C06D1D49C544C51";
                     String B12 = "041D9136AA9647F2";
                     return A11 + "," + A12 + "," + B11 + "," + B12;
-
                 case "DA3189_001":
                     // 以利亞之家
                     QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
-                    String A21 = "A88FB80292D6420D";
-                    String A22 = "3844DD3B214D487C";
-                    String B21 = "27BC1983D2914C11";
-                    String B22 = "32D5A23910734C93";
+                    A21 = "A88FB80292D6420D";
+                    A22 = "3844DD3B214D487C";
+                    B21 = "27BC1983D2914C11";
+                    B22 = "32D5A23910734C93";
+                    return A21 + "," + A22 + "," + B21 + "," + B22;
+                case "DA3412_001":
+                    // 安平靈糧堂
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                    A21 = "2B27264C1D794727";
+                    A22 = "7C91CB903482427D";
+                    B21 = "7360D573A5A34184";
+                    B22 = "3C85541425624385";
                     return A21 + "," + A22 + "," + B21 + "," + B22;
                 default:
                     QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
