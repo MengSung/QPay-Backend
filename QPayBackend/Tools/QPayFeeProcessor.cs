@@ -217,7 +217,7 @@ namespace QPayBackend.Tools
                                     Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
 
                                     #region 報名狀態
-                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch" || aQryOrderPay.TSResultContent.Param2 == "ymllc" || aQryOrderPay.TSResultContent.Param2 == "ymllcback" || aQryOrderPay.TSResultContent.Param2 == "apbolc" || aQryOrderPay.TSResultContent.Param2 == "apbolcback" || aQryOrderPay.TSResultContent.Param2 == "wenhua" || aQryOrderPay.TSResultContent.Param2 == "wenhuaback")
+                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch" || aQryOrderPay.TSResultContent.Param2 == "ymllc" || aQryOrderPay.TSResultContent.Param2 == "ymllcback" || aQryOrderPay.TSResultContent.Param2 == "apbolc" || aQryOrderPay.TSResultContent.Param2 == "apbolcback" || aQryOrderPay.TSResultContent.Param2 == "gned" || aQryOrderPay.TSResultContent.Param2 == "gnedback" || aQryOrderPay.TSResultContent.Param2 == "wenhua" || aQryOrderPay.TSResultContent.Param2 == "wenhuaback")
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
@@ -352,7 +352,7 @@ namespace QPayBackend.Tools
                                     Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
 
                                     #region 報名狀態
-                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch" || aQryOrderPay.TSResultContent.Param2 == "ymllc" || aQryOrderPay.TSResultContent.Param2 == "ymllcback" || aQryOrderPay.TSResultContent.Param2 == "apbolc" || aQryOrderPay.TSResultContent.Param2 == "apbolcback" || aQryOrderPay.TSResultContent.Param2 == "wenhua" || aQryOrderPay.TSResultContent.Param2 == "wenhuaback")
+                                    if (aQryOrderPay.TSResultContent.Param2 == "yhchurch" || aQryOrderPay.TSResultContent.Param2 == "imchurch" || aQryOrderPay.TSResultContent.Param2 == "thevictory" || aQryOrderPay.TSResultContent.Param2 == "dhchurch" || aQryOrderPay.TSResultContent.Param2 == "ymllc" || aQryOrderPay.TSResultContent.Param2 == "ymllcback" || aQryOrderPay.TSResultContent.Param2 == "apbolc" || aQryOrderPay.TSResultContent.Param2 == "apbolcback" || aQryOrderPay.TSResultContent.Param2 == "gned" || aQryOrderPay.TSResultContent.Param2 == "gnedback" || aQryOrderPay.TSResultContent.Param2 == "wenhua" || aQryOrderPay.TSResultContent.Param2 == "wenhuaback")
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂 、 iM行動教會
                                         this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
@@ -503,6 +503,12 @@ namespace QPayBackend.Tools
                 case "elijah":
                     // 以利亞之家
                     return @"EIDRTDTCV+mEPYMF+9QH3A7gG8K1byzBAcCa5baMwy1SpQzBpwekVlsbUDQw9I3X/8f3wAW7oV6dpr4Li0uNMrIBJ0izPbQHoUOMA5NfJEPPaNK5LHdUAdk8myEDo5kGKh8fX4qk8qp0Hq54QRFMqgdB04t89/1O/w1cDnyilFU=";
+                case "gned":
+                    // 好消息協會(雲端機房)
+                    return @"vRUI+dqKnKJxehlMVczi+fVcY1tKek/uX7dHgBbF5L6qFSBZRd2IGMhs0NIxgjVr4QaUk6V7Oj7otTWfmosAbA7/AcWfV/NQjXOBYgIFNZ09V5q30x/0vGwIbAsC9qkZs6FW2cmKa8/7TtF0iirvtwdB04t89/1O/w1cDnyilFU=";
+                case "gnedback":
+                    // 好消息協會(公司研發)
+                    return @"vRUI+dqKnKJxehlMVczi+fVcY1tKek/uX7dHgBbF5L6qFSBZRd2IGMhs0NIxgjVr4QaUk6V7Oj7otTWfmosAbA7/AcWfV/NQjXOBYgIFNZ09V5q30x/0vGwIbAsC9qkZs6FW2cmKa8/7TtF0iirvtwdB04t89/1O/w1cDnyilFU=";
                 default:
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
