@@ -530,6 +530,12 @@ namespace QPayBackend.Tools
                 case "gnedback":
                     // 好消息協會(公司研發)
                     return @"vRUI+dqKnKJxehlMVczi+fVcY1tKek/uX7dHgBbF5L6qFSBZRd2IGMhs0NIxgjVr4QaUk6V7Oj7otTWfmosAbA7/AcWfV/NQjXOBYgIFNZ09V5q30x/0vGwIbAsC9qkZs6FW2cmKa8/7TtF0iirvtwdB04t89/1O/w1cDnyilFU=";
+                case "frenchhorn":
+                    // 法國號靈糧堂(雲端機房)
+                    return @"NEWCstFl+mWYTFbPJa63kJy3Ih7WC25NGYhNfA6EACKD2UBOM/iZtk4VT/9aHQ3yF3XNruxYuJnFYNrQaW1o2PCXKZdNIluRIIcksoUXPYHhDVdHsCUV7PNSRfPFEbHLLpnXw5ce1vIIQwOtUoRhCAdB04t89/1O/w1cDnyilFU=";
+                case "frenchhornback":
+                    // 法國號靈糧堂(公司研發)
+                    return @"NEWCstFl+mWYTFbPJa63kJy3Ih7WC25NGYhNfA6EACKD2UBOM/iZtk4VT/9aHQ3yF3XNruxYuJnFYNrQaW1o2PCXKZdNIluRIIcksoUXPYHhDVdHsCUV7PNSRfPFEbHLLpnXw5ce1vIIQwOtUoRhCAdB04t89/1O/w1cDnyilFU=";
                 default:
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
