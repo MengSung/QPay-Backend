@@ -91,6 +91,14 @@ namespace ToolUtilityNameSpace
                     B21 = "7360D573A5A34184";
                     B22 = "3C85541425624385";
                     return A21 + "," + A22 + "," + B21 + "," + B22;
+                case "DA3806_001":
+                    // 好消息協會
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                    A21 = "81F5DAFEAFD343EC";
+                    A22 = "80BA10061E59467B";
+                    B21 = "B5F2CBA592004D2D";
+                    B22 = "D6D805E2CF514E12";
+                    return A21 + "," + A22 + "," + B21 + "," + B22;
                 default:
                     QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
                     return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
