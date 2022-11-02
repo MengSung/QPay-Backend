@@ -99,6 +99,14 @@ namespace ToolUtilityNameSpace
                     B21 = "B5F2CBA592004D2D";
                     B22 = "D6D805E2CF514E12";
                     return A21 + "," + A22 + "," + B21 + "," + B22;
+                case "DA3855_002":
+                    // 法國號靈糧堂
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                    A21 = "08B9715C313F4ABB";
+                    A22 = "E8AC362AB9174D3C";
+                    B21 = "81D71D28D7E04414";
+                    B22 = "927ADFBE9F854C81";
+                    return A21 + "," + A22 + "," + B21 + "," + B22;
                 default:
                     QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
                     return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
