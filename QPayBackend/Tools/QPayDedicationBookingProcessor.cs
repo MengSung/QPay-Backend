@@ -299,7 +299,7 @@ namespace QPayBackend.Tools
             {
                 String ErrorString = "ERROR : FullName = " + this.GetType().FullName.ToString() + " , Time = " + DateTime.Now.ToString() + " , Description = " + e.ToString();
 
-                m_PushUtility.SendMessage(MENGSUNG_LINE_ID, ErrorString);
+                m_PushUtility.SendMessage(MENGSUNG_LINE_ID, ErrorString+ Environment.NewLine + "程式呼叫 : " + aQryOrderPay.Description + Environment.NewLine+ "交易結果 : " +aQryOrderPay.TSResultContent.Description );
                 //Monitor.Exit(this);
                 throw e;
             }
