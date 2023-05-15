@@ -428,6 +428,17 @@ namespace QPayBackend.Tools
                     this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeToCreated, "new_description", aOriginalDescription + "信用卡付款結果失敗!" + Environment.NewLine + Description);
                 }
 
+                if( aQryOrderPay.ShopNo == "DA1626_001" && aQryOrderPay.ShopNo != null )
+                {
+                    // 永和禮拜堂的收款分行:奉獻的定期定額都是歸到"板橋民族分行"
+                    this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeToCreated, "new_bank_branch", "板橋民族分行");
+                }
+                else if(aQryOrderPay.ShopNo == "DA1626_003" && aQryOrderPay.ShopNo != null )
+                {
+                    // 永和禮拜堂的收款分行:報名繳費都是歸到"永和分行"
+                    this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeToCreated, "new_bank_branch", "永和分行");
+                }
+                else { }
 
                 // 收費單奉獻其他類別
                 //if (QpayModel.Others != "" && QpayModel.Others != null)

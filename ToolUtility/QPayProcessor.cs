@@ -44,9 +44,13 @@ namespace ToolUtilityNameSpace
             switch (aShopNo)
             {
                 case "DA1626_001":
-                    // 永和禮拜堂
+                    // 永和禮拜堂"板橋民族分行"
                     QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
                     return "D1695F439A69448F,7E460E920A184845,DEA83EFB714943F3,DC237C5C69914F0C";
+                case "DA1626_003":
+                    // 永和禮拜堂"永和分行"
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                    return "2C5D55945FCF4767,76052054D7054EA6,13F282F8A0F5475D,D782B4F1893A4334";
                 case "DA2424_001":
                     // iM行動教會
                     QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
