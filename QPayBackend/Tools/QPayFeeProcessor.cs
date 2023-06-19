@@ -233,7 +233,9 @@ namespace QPayBackend.Tools
                                             aQryOrderPay.TSResultContent.Param2 == "tpehoc" ||
                                             aQryOrderPay.TSResultContent.Param2 == "tpehocback" ||
                                             aQryOrderPay.TSResultContent.Param2 == "khhoc" ||
-                                            aQryOrderPay.TSResultContent.Param2 == "khhocback"
+                                            aQryOrderPay.TSResultContent.Param2 == "khhocback" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "fbllc" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "fbllcback"
                                         )
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂
