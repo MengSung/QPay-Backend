@@ -112,12 +112,20 @@ namespace ToolUtilityNameSpace
                     B22 = "927ADFBE9F854C81";
                     return A21 + "," + A22 + "," + B21 + "," + B22;
                 case "DA4001_001":
-                    // 法國號靈糧堂
+                    // 社團法人台灣基督教天母豐盛協會
                     QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
                     A21 = "B2FC3849C9F6487C";
                     A22 = "6ADDD7D7CCFC48BA";
                     B21 = "2F83CE17C6044E3D";
                     B22 = "48737E77D6864915";
+                    return A21 + "," + A22 + "," + B21 + "," + B22;
+                case "DA3009_001":
+                    // 神住611靈糧堂
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                    A21 = "D3AA59886C7041B2";
+                    A22 = "4519D42101984D8E";
+                    B21 = "93BCEDA52A8C45D9";
+                    B22 = "F983B7D4C9154484";
                     return A21 + "," + A22 + "," + B21 + "," + B22;
                 default:
                     QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
