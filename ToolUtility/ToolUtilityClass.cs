@@ -39,21 +39,21 @@ namespace ToolUtilityNameSpace
         #region Dynamics 365 新增組織修改區
 
         #region (雲端機房)
-        private const String SERVER = "speechmessage.com.tw";
-        private const String PORT = "7777";
-        //private const String ORGANIZATION = "";
-        private const String USERNAME = "Administrator@speechmessage.com.tw";
-        private const String PASSWORD = "hu9840";
-        private const String DOMAIN = "DYNAMICS-365";
+        //private const String SERVER = "speechmessage.com.tw";
+        //private const String PORT = "7777";
+        ////private const String ORGANIZATION = "";
+        //private const String USERNAME = "Administrator@speechmessage.com.tw";
+        //private const String PASSWORD = "hu9840";
+        //private const String DOMAIN = "DYNAMICS-365";
         #endregion
 
         #region (公司發展)
-        //private const String SERVER = "speechmessage.com.tw";
-        //private const String PORT = "7777";
-        //private const String ORGANIZATION = "";
-        //private const String USERNAME = "Administrator@speechmessage.com.tw";
-        //private const String PASSWORD = "hu9840";
-        //private const String DOMAIN = "SPEECHMESSAGE";
+        private const String SERVER = "speechmessage.com.tw";
+        private const String PORT = "7777";
+        private const String ORGANIZATION = "";
+        private const String USERNAME = "Administrator@speechmessage.com.tw";
+        private const String PASSWORD = "hu9840";
+        private const String DOMAIN = "SPEECHMESSAGE";
         #endregion
 
         #region 僅供參考區塊

@@ -237,7 +237,9 @@ namespace QPayBackend.Tools
                                             aQryOrderPay.TSResultContent.Param2 == "fbllc" ||
                                             aQryOrderPay.TSResultContent.Param2 == "fbllcback" ||
                                             aQryOrderPay.TSResultContent.Param2 == "shekinah611" ||
-                                            aQryOrderPay.TSResultContent.Param2 == "shekinah611back"
+                                            aQryOrderPay.TSResultContent.Param2 == "shekinah611back"||
+                                            aQryOrderPay.TSResultContent.Param2 == "nankanchurch" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "nankanchurchback"
                                      )
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂
@@ -579,6 +581,12 @@ namespace QPayBackend.Tools
                 case "khhocback":
                     // 高雄基督之家(公司研發)
                     return @"a5bB4sunKwoZGjbf0HvFnenCpiABmzIT6rGU4rQ25QAqDhxj8Wa+RwXKQN2CZVC3lSk2sZ2n5bqzCcvaa8J/DIOzUdLUUgq1wF6SIvcd0sL0uFWn0+XyaQXdii1QHvA4Lm+NU5wehU4zIhdxZaMMsAdB04t89/1O/w1cDnyilFU=";
+                case "nankanchurch":
+                    // 南崁長老教會(雲端機房)
+                    return @"m7bC4vm/2pA8VEBbHZ1YHdr0iz4fmOMWqT1jEZg+62DFvGEEfY7JEJ7up5gNdpJ3DSZHFmr+YZpEu02B15B4ZMx7s03ZeLqZi1lSmpxsA04Zi6cOJlQemlXjlUMlh+HOKb3BfOhOPY+hYtMbH2tUXQdB04t89/1O/w1cDnyilFU=";
+                case "nankanchurchback":
+                    // 南崁長老教會(公司研發)
+                    return @"m7bC4vm/2pA8VEBbHZ1YHdr0iz4fmOMWqT1jEZg+62DFvGEEfY7JEJ7up5gNdpJ3DSZHFmr+YZpEu02B15B4ZMx7s03ZeLqZi1lSmpxsA04Zi6cOJlQemlXjlUMlh+HOKb3BfOhOPY+hYtMbH2tUXQdB04t89/1O/w1cDnyilFU=";
                 default:
                     return @"aKS4zYeq2ZpqlLd4gslkWAyYuiC+B2f1noatF1VylPvkR2+mrvJ7mwnIIXtn2Pi117NBmNTmRZL5DO5ZMYaGCj/v9+fB6Zn9sel42Jr55PlegJdrtoSvPgm4fBso1tY/7H65+cOFDQxjqhdOU69qQAdB04t89/1O/w1cDnyilFU=";
             }
