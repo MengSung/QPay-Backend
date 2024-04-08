@@ -481,6 +481,12 @@ namespace QPayBackend.Tools
             //客製化
             switch (Organzition)
             {
+                case "nankanchurch":
+                    // 南崁長老教會(雲端機房)
+                    return @"m7bC4vm/2pA8VEBbHZ1YHdr0iz4fmOMWqT1jEZg+62DFvGEEfY7JEJ7up5gNdpJ3DSZHFmr+YZpEu02B15B4ZMx7s03ZeLqZi1lSmpxsA04Zi6cOJlQemlXjlUMlh+HOKb3BfOhOPY+hYtMbH2tUXQdB04t89/1O/w1cDnyilFU=";
+                case "nankanchurchback":
+                    // 南崁長老教會(公司研發)
+                    return @"m7bC4vm/2pA8VEBbHZ1YHdr0iz4fmOMWqT1jEZg+62DFvGEEfY7JEJ7up5gNdpJ3DSZHFmr+YZpEu02B15B4ZMx7s03ZeLqZi1lSmpxsA04Zi6cOJlQemlXjlUMlh+HOKb3BfOhOPY+hYtMbH2tUXQdB04t89/1O/w1cDnyilFU=";
                 case "fbllc":
                     // 天母豐盛靈糧堂(雲端機房)
                     return @"JKvyZvuUbypnSwia3YlLwT0qFT9x0YAidIEW8yqgjB6qnMJTMALwy+8g62vNxOugd028TTGMI9B8dTJgD5y4hJq33gugp5/lmVxqacDXudfaCevgMrPlYtIFDtzByGpyYwIBC/clkFUxK/5kmIKxbAdB04t89/1O/w1cDnyilFU=";
