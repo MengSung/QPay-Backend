@@ -389,6 +389,9 @@ namespace QPayBackend.Tools
                 // 奉獻類別
                 this.m_ToolUtilityClass.SetOptionSetAttribute(aFeeToCreated, "new_category", this.m_ToolUtilityClass.GetOptionSetAttribute(ref aDedicationBookingEntity, "new_dedication_category"));
 
+                // 奉獻地點就要依據連絡人所屬教會設定
+                this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeToCreated, "new_dedicate_location", this.m_ToolUtilityClass.GetEntityLookupDisplayName(ref aContact, "parentcustomerid"));
+
                 // 付款紀錄
                 String aPaymentRecords =
                         this.m_ToolUtilityClass.GetEntityStringAttribute(aFeeToCreated, "new_payment_records") +
