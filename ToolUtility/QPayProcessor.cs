@@ -127,6 +127,14 @@ namespace ToolUtilityNameSpace
                     B21 = "93BCEDA52A8C45D9";
                     B22 = "F983B7D4C9154484";
                     return A21 + "," + A22 + "," + B21 + "," + B22;
+                case "DA4195_001":
+                    // 南崁長老教會
+                    QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                    A21 = "B83DCBFA2D994F19";
+                    A22 = "6ED32787DA504871";
+                    B21 = "13E56D7A39AB4768";
+                    B22 = "163EC08BC1624854";
+                    return A21 + "," + A22 + "," + B21 + "," + B22;
                 default:
                     QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
                     return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
