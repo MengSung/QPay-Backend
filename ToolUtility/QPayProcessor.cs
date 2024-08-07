@@ -43,6 +43,10 @@ namespace ToolUtilityNameSpace
             //客製化
             switch (aShopNo)
             {
+                case "NA0149_001":
+                    // 音訊教會 SandBox
+                    QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
+                    return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
                 case "DA1626_001":
                     // 永和禮拜堂"板橋民族分行"
                     QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
@@ -59,10 +63,6 @@ namespace ToolUtilityNameSpace
                     // 台北得勝靈糧堂
                     QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
                     return "C8DAEA50FFB64CF4,F141E5BBE21B4D47,A922E0C106D14C35,CA22A88D1032412F";
-                case "NA0149_001":
-                    // 音訊教會 SandBox
-                    QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
-                    return "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399";
                 case "DA2890_001":
                     // 忠孝路長老教會
                     QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
