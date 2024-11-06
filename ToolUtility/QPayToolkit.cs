@@ -14,6 +14,7 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 using Hex = ToolUtilityNameSpace.QPayCommon.HexEncoding;
 
 namespace ToolUtilityNameSpace
@@ -21,18 +22,12 @@ namespace ToolUtilityNameSpace
     public static class QPayToolkit
     {
         private static string _currentVersion = "1.0.0";
+
         //private static string _site = ConfigurationManager.AppSettings["QPayWebAPIUrl"];
         //private static string _site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
-        public static string _site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
-
-
-        // 永豐金流寄給永和禮拜堂的HASH CODE
-        private const String A1 = "D1695F439A69448F";
-        private const String A2 = "7E460E920A184845";
-        private const String B1 = "DEA83EFB714943F3";
-        private const String B2 = "DC237C5C69914F0C";
-
-        private const String HASH_CODE = A1 + "," + A2 + "," + B1 + "," + B2;
+        //public static string _site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+        //public static string _site = "https://api.sinopac.com/funBIZ/QPay.WebAPI/api/"
+        private static string _site = ConfigurationManager.AppSettings["_site"];
 
         #region Public method
         #region 訂單建立 (虛擬帳號、信用卡)
@@ -42,11 +37,11 @@ namespace ToolUtilityNameSpace
         /// <param name="req"></param>
         /// <example>
         /// 串接範例如下:
-        /// CreOrder retObj = QPayToolkit.OrderCreate(new CreOrderReq() { ... });
+        /// CreOrder retObj = QPayToolkit.OrderCreate(new CreOrderReq() { ...  
         /// </example>
-        public static CreOrder OrderCreate(CreOrderReq req)
+        public static CreOrder OrderCreate(CreOrderReq req, String HashCode, String XKey)
         {
-            return GetQPayResponse<CreOrderReq, CreOrder>(req, APIService.OrderCreate);
+            return GetQPayResponse<CreOrderReq, CreOrder>(req, APIService.OrderCreate, HashCode, XKey);
         }
         #endregion
 
@@ -59,9 +54,9 @@ namespace ToolUtilityNameSpace
         /// 串接範例如下:
         /// QryOrderUnCaptured retObj = QPayToolkit.OrderUnCapturedQuery(new QryOrderUnCapturedReq() { ... });
         /// </example>
-        public static QryOrderUnCaptured OrderUnCapturedQuery(QryOrderUnCapturedReq req)
+        public static QryOrderUnCaptured OrderUnCapturedQuery(QryOrderUnCapturedReq req, String HashCode, String XKey)
         {
-            return GetQPayResponse<QryOrderUnCapturedReq, QryOrderUnCaptured>(req, APIService.OrderUnCapturedQuery);
+            return GetQPayResponse<QryOrderUnCapturedReq, QryOrderUnCaptured>(req, APIService.OrderUnCapturedQuery, HashCode, XKey);
         }
         #endregion
 
@@ -74,9 +69,9 @@ namespace ToolUtilityNameSpace
         /// 串接範例如下:
         /// OrderMaintain retObj = QPayToolkit.OrderMaintain(new OrderMaintainReq() { ... });
         /// </example>
-        public static OrderMaintain OrderMaintain(OrderMaintainReq req)
+        public static OrderMaintain OrderMaintain(OrderMaintainReq req, String HashCode, String XKey)
         {
-            return GetQPayResponse<OrderMaintainReq, OrderMaintain>(req, APIService.OrderMaintain);
+            return GetQPayResponse<OrderMaintainReq, OrderMaintain>(req, APIService.OrderMaintain, HashCode, XKey);
         }
         #endregion
 
@@ -89,9 +84,9 @@ namespace ToolUtilityNameSpace
         /// 串接範例如下:
         /// QryOrder retObj = QPayToolkit.OrderQuery(new QryOrderReq() { ... });
         /// </example>
-        public static QryOrder OrderQuery(QryOrderReq req)
+        public static QryOrder OrderQuery(QryOrderReq req, String HashCode, String XKey)
         {
-            return GetQPayResponse<QryOrderReq, QryOrder>(req, APIService.OrderQuery);
+            return GetQPayResponse<QryOrderReq, QryOrder>(req, APIService.OrderQuery, HashCode, XKey);
         }
         #endregion
 
@@ -104,13 +99,9 @@ namespace ToolUtilityNameSpace
         /// 串接範例如下:
         /// QryOrderPay retObj = QPayToolkit.OrderPayQuery(new QryOrderPayReq() { ... });
         /// </example>
-        public static QryOrderPay OrderPayQuery(QryOrderPayReq req)
+        public static QryOrderPay OrderPayQuery(QryOrderPayReq req, String HashCode, String XKey)
         {
-            return GetQPayResponse<QryOrderPayReq, QryOrderPay>(req, APIService.OrderPayQuery);
-        }
-        public static QryOrderPay OrderPayQuery(QryOrderPayReq req, String HashCode)
-        {
-            return GetQPayResponse<QryOrderPayReq, QryOrderPay>(req, APIService.OrderPayQuery, HashCode);
+            return GetQPayResponse<QryOrderPayReq, QryOrderPay>(req, APIService.OrderPayQuery, HashCode, XKey);
         }
         #endregion
 
@@ -123,9 +114,9 @@ namespace ToolUtilityNameSpace
         /// 串接範例如下:
         /// QryBill retObj = QPayToolkit.BillQuery(new QryBillReq() { ... });
         /// </example>
-        public static QryBill BillQuery(QryBillReq req)
+        public static QryBill BillQuery(QryBillReq req, String HashCode, String XKey)
         {
-            return GetQPayResponse<QryBillReq, QryBill>(req, APIService.BillQuery);
+            return GetQPayResponse<QryBillReq, QryBill>(req, APIService.BillQuery, HashCode, XKey);
         }
         #endregion
 
@@ -138,109 +129,16 @@ namespace ToolUtilityNameSpace
         /// 串接範例如下:
         /// QryAllot retObj = QPayToolkit.AllotQuery(new QryAllotReq() { ... });
         /// </example>
-        public static QryAllot AllotQuery(QryAllotReq req)
+        public static QryAllot AllotQuery(QryAllotReq req, String HashCode, String XKey)
         {
-            return GetQPayResponse<QryAllotReq, QryAllot>(req, APIService.AllotQuery);
+            return GetQPayResponse<QryAllotReq, QryAllot>(req, APIService.AllotQuery, HashCode, XKey);
         }
         #endregion
         #endregion
 
         #region Private method
         #region 取得QPay Web API response
-        private static TResult GetQPayResponse<TReq, TResult>(TReq request, APIService apiService ) where TReq : IQPayReq
-        {
-            //string shopNo = request.ShopNo;
-            string shopNo = request.ShopNo;
-            //由appSettings取得指定商店雜湊值  ex <add key="AA0001" value="...,...,...,..."/>
-            //string apiKeyData = ConfigurationManager.AppSettings.Get(shopNo);
-            //if (string.IsNullOrEmpty(apiKeyData))
-            //    throw new Exception("AppSettings.config 中不存在指定商店API Keys");
-
-            //將取得雜湊值以逗號(,)分隔並轉小寫，產生string陣列
-            //string[] apiKeys = apiKeyData.ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            //string[] apiKeys = "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399".ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            //string[] apiKeys = apiKeyData.ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            string[] apiKeys = HASH_CODE.ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            //string[] apiKeys = "5E854757C751413F,D743D0EB06904837,08169D5445644513,8E52B5A180EE4399".ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-            //string[] apiKeys = "D1695F439A69448F,7E460E920A184845,DEA83EFB714943F3,DC237C5C69914F0C".ToLower().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-            //產生取Nonce Request
-            NonceReq nonceReq = new NonceReq(shopNo);
-
-            //發送Request並取得Nonce Responce
-            NonceRes nonceRes = GetNonce(nonceReq).Result;
-
-            if (string.IsNullOrEmpty(nonceRes.Nonce))
-                throw new Exception("Nonce值為null或空值");
-
-            int i;
-            //1.移除雜湊中的"-"
-            //2.取得雜湊的前16碼
-            //3.將步驟2結果轉為16進制byte陣列
-            List<byte[]> keyList = apiKeys.ToList().Select(x => Hex.GetBytes(x.Replace("-", "").Substring(0, 16), out i)).ToList();
-
-            string
-                sha256,
-                iv,
-                //1.分別將 雜湊A1 XOR 雜湊A2, 雜湊B1 XOR 雜湊B2
-                //2.將步驟1的兩個結果各自轉為16進制字串 S1, S2
-                //3.AESKey = S1 + S2
-                aesKey = Hex.ToString(QPayCommon.XOR(keyList[0], keyList[1])) + Hex.ToString(QPayCommon.XOR(keyList[2], keyList[3])),
-                //之前取得之Nonce
-                nonce = nonceRes.Nonce,
-                //序列化之Request物件
-                innerJson = QPayCommon.SerializeToJson(request),
-                //利用 AESKey, Nonce進行AESCBC加密，加密內文(提供out SHA256及 out iv可供後續驗證)
-                msg = QPayCommon.EncryptAesData(aesKey, innerJson, nonce, out sha256, out iv);
-
-            //產生WebAPIMessage
-            WebAPIMessage req = new WebAPIMessage()
-            {
-                Version = _currentVersion,
-                ShopNo = shopNo,
-                APIService = apiService.ToString(),
-                Nonce = nonce,
-                Message = msg,
-                //利用Request物件, AESKey及Nonce組成Sign值
-                Sign = request.GenerateSign(aesKey, nonce)
-            };
-
-            try
-            {
-                QPayCommon.InfoLog(string.Format("呼叫商業收付API Order/{0} , Request:{1}", req.APIService, QPayCommon.SerializeToJson(req)));
-
-                //呼叫商業收付Web API
-                WebAPIMessage result = NewAPI<WebAPIMessage>("Order", req).Result;
-
-                QPayCommon.InfoLog(string.Format("呼叫商業收付API Order/{0} , Response:{1}", req.APIService, QPayCommon.SerializeToJson(result)));
-
-                //利用 AESKey, Nonce進行AESCBC解密，解密內文(提供out SHA256及 out iv可供後續驗證)
-                string decodedMsg = QPayCommon.DecryptAesData(aesKey, result.Message, result.Nonce, out sha256, out iv);
-
-                QPayCommon.InfoLog("Response Message:" + decodedMsg);
-
-                //反序列化取得Response物件
-                TResult innerResult = JsonConvert.DeserializeObject<TResult>(decodedMsg);
-
-                //Sign值驗證
-                string responseSign = innerResult.GenerateSign(aesKey, result.Nonce);
-                if (responseSign != result.Sign)
-                {
-                    string validateFailMsg = "sign value validate fail!! response sign value:" + result.Sign + ", calculate sign value:" + responseSign;
-
-                    QPayCommon.ExceptionLog(validateFailMsg);
-                    throw new Exception(validateFailMsg);
-                }
-
-                return innerResult;
-            }
-            catch (Exception ex)
-            {
-                QPayCommon.ExceptionLog(null, ex);
-                throw ex;
-            }
-        }
-        private static TResult GetQPayResponse<TReq, TResult>(TReq request, APIService apiService, String HashCode) where TReq : IQPayReq
+        private static TResult GetQPayResponse<TReq, TResult>(TReq request, APIService apiService, String HashCode, String XKey) where TReq : IQPayReq
         {
             //string shopNo = request.ShopNo;
             string shopNo = request.ShopNo;
@@ -261,7 +159,7 @@ namespace ToolUtilityNameSpace
             NonceReq nonceReq = new NonceReq(shopNo);
 
             //發送Request並取得Nonce Responce
-            NonceRes nonceRes = GetNonce(nonceReq).Result;
+            NonceRes nonceRes = GetNonce(nonceReq, XKey).Result;
 
             if (string.IsNullOrEmpty(nonceRes.Nonce))
                 throw new Exception("Nonce值為null或空值");
@@ -303,7 +201,7 @@ namespace ToolUtilityNameSpace
                 QPayCommon.InfoLog(string.Format("呼叫商業收付API Order/{0} , Request:{1}", req.APIService, QPayCommon.SerializeToJson(req)));
 
                 //呼叫商業收付Web API
-                WebAPIMessage result = NewAPI<WebAPIMessage>("Order", req).Result;
+                WebAPIMessage result = NewAPI<WebAPIMessage>("Order", req, XKey).Result;
 
                 QPayCommon.InfoLog(string.Format("呼叫商業收付API Order/{0} , Response:{1}", req.APIService, QPayCommon.SerializeToJson(result)));
 
@@ -337,7 +235,7 @@ namespace ToolUtilityNameSpace
 
         #region APIClient
         #region 呼叫Nonce API(一次性數值)
-        private static async Task<NonceRes> GetNonce(NonceReq req)
+        private static async Task<NonceRes> GetNonce(NonceReq req, String XKey)
         {
             string url = _site + "Nonce";
 
@@ -345,6 +243,7 @@ namespace ToolUtilityNameSpace
 
             using (var client = new HttpClient())
             {
+                client.DefaultRequestHeaders.Add("X-KeyID", XKey);
                 responce = client.PostAsJsonAsync(url, req).Result;
             }
 
@@ -365,7 +264,7 @@ namespace ToolUtilityNameSpace
         #endregion
 
         #region 呼叫商店API
-        private static async Task<T> NewAPI<T>(string route, WebAPIMessage req) where T : new()
+        private static async Task<T> NewAPI<T>(string route, WebAPIMessage req, String XKey) where T : new()
         {
             string url = _site + route;
 
@@ -373,6 +272,7 @@ namespace ToolUtilityNameSpace
 
             using (var client = new HttpClient())
             {
+                client.DefaultRequestHeaders.Add("X-KeyID", XKey);
                 response = client.PostAsJsonAsync(url, req).Result;
             }
 
