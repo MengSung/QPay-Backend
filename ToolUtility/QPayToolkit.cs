@@ -27,7 +27,8 @@ namespace ToolUtilityNameSpace
         //private static string _site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
         //public static string _site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
         //public static string _site = "https://api.sinopac.com/funBIZ/QPay.WebAPI/api/"
-        private static string _site = ConfigurationManager.AppSettings["_site"];
+        //public static string _site = ConfigurationManager.AppSettings["_site"];
+        public static string _site = ConfigurationManager.AppSettings["SINOPAC_SITE"];
 
         #region Public method
         #region 訂單建立 (虛擬帳號、信用卡)
