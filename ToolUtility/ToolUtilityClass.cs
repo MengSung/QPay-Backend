@@ -18,6 +18,7 @@ using Microsoft.Xrm.Sdk.Client;
 using Microsoft.Xrm.Sdk.Discovery;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Messages;
+using TraceNameSpace;
 
 namespace ToolUtilityNameSpace
 {
@@ -92,14 +93,23 @@ namespace ToolUtilityNameSpace
         private const int LEVEL_3 = 3;
         private const int LEVEL_4 = 4;
         private const int LEVEL_5 = 5; // 比較不會被看到的，可能是比較細節的部分
-        // 如果 TRACE_LEVEL >= TRACE_LEVEL_GROUND 就會進行追蹤
-        // 如果 TRACE_LEVEL < TRACE_LEVEL_GROUND 就不會進行追蹤
-        //int TRACE_LEVEL = 5;
-        //int TRACE_LEVEL_GROUND = 3;
+                                       // 如果 TRACE_LEVEL >= TRACE_LEVEL_GROUND 就會進行追蹤
+                                       // 如果 TRACE_LEVEL < TRACE_LEVEL_GROUND 就不會進行追蹤
+                                       //int TRACE_LEVEL = 5;
+                                       //int TRACE_LEVEL_GROUND = 3;
         #endregion
 
         #endregion
         #endregion
+        #region 追蹤專用變數
+        private String m_TraceLogFile = "";
+        private BugslayerTextWriterTraceListener m_Listener = new BugslayerTextWriterTraceListener();
+        private FileStream m_XmlFileStream;
+        private StreamWriter m_XmlFileStreamWriter;
+        private const String TRACE_DIRECTOR = @"D:\除錯追蹤\" + "QPBACKEND_TRACE.TXT";
+        //private const String TRACE_DIRECTOR = @"C:\除錯追蹤\" + "TRACE.TXT";
+        #endregion
+
         #region 建構式
         public ToolUtilityClass( )
         {
@@ -111,6 +121,16 @@ namespace ToolUtilityNameSpace
         }
         public ToolUtilityClass(String DiscoveryServiceType, String aOrganization )
         {
+            #region 追蹤專用變數
+            m_TraceLogFile = TRACE_DIRECTOR;
+            m_XmlFileStream = new FileStream(m_TraceLogFile, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+            m_XmlFileStreamWriter = new StreamWriter(m_XmlFileStream, Encoding.GetEncoding("big5"));
+            m_Listener = new BugslayerTextWriterTraceListener(m_XmlFileStreamWriter);
+
+            Debug.AutoFlush = true;
+            Debug.Listeners.Add(m_Listener);
+            #endregion
+
             //SetOrganizationService();
 
             //SetClaimsBasedAuthenticationOrganizationService();

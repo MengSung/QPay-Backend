@@ -25,6 +25,19 @@ namespace QPayBackend.Tools
         // 音訊教會-雲端除錯用
         private const String SPEECHMESSAGE_CHANNEL_ACCESS_TOKEN = @"g1jtWWNkjbH3OCh1cKoRvPBUkCJIygNuvV/neHXR9I4J5GBgVE85inaIaTcT4AAZ1qCuqrqJXDawrUweyBqLcX97GGokXnTRQ6MxjXAutd5Yr2FkPsZnq6kMelc/C+mqNUHaVUKFAuvTD8JvXbNmpAdB04t89/1O/w1cDnyilFU=";
         #endregion
+        #region 除錯用參數
+        private const int TOTAL_LEVEL = 1;//改變這個值，就會改追蹤的階層，值越小越不會追蹤，若是 TOTAL_LEVEL = 3 ，則大於 3 的 LEVEL，例如 : LEVEL_4、LEVEL_5 就不會被追蹤
+        //private const int TOTAL_LEVEL = 5;//改變這個值，就會改追蹤的階層，值越大越會追蹤，若是 TOTAL_LEVEL = 3 ，則大於 3 的 LEVEL，例如 : LEVEL_4、LEVEL_5 就不會被追蹤
+        private const int LEVEL_1 = 1; // 比較容易被看到的，可能是比較大範圍的部分
+        private const int LEVEL_2 = 2;
+        private const int LEVEL_3 = 3;
+        private const int LEVEL_4 = 4;
+        private const int LEVEL_5 = 5; // 比較不會被看到的，可能是比較細節的部分
+        // 如果 TRACE_LEVEL >= TRACE_LEVEL_GROUND 就會進行追蹤
+        // 如果 TRACE_LEVEL < TRACE_LEVEL_GROUND 就不會進行追蹤
+        //int TRACE_LEVEL = 5;
+        //int TRACE_LEVEL_GROUND = 3;
+        #endregion
         #region 初始化
         public QPayFeeProcessor()
         {
@@ -80,6 +93,7 @@ namespace QPayBackend.Tools
                     {
                         // 正常的去應到該組織
                         m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
+                        m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayBackendUrl-001");
                     }
 
                     #region 建立通知用的 LineMessagingClient

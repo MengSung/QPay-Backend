@@ -109,6 +109,10 @@
       <Project>{21acf7ad-d0cd-4303-90e0-f01cbd832f71}</Project>
       <Name>Line.Messaging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Trace\Trace.csproj">
+      <Project>{dc1614b1-9b67-4ac8-b7a8-66f5bee26d5e}</Project>
+      <Name>Trace</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
