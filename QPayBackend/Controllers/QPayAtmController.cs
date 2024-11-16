@@ -26,18 +26,18 @@ namespace QPayBackend.Controllers
 
         public QPayAtmController()
         {
-            m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "jesus");
+            //m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "jesus");
 
-            m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayAtmController，Constructor");
+            //m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayAtmController，Constructor");
         }
 
         [HttpGet]
         [Route("QPayBackendUrl")]
         public async Task<IActionResult> QPayReturnUrl(int? id = 0)
         {
-            m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "jesus");
+            //m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "jesus");
 
-            m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayAtmController:QPayBackendUrl-001:ShopNo=XXXXXXXXX");
+            //m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayAtmController:QPayBackendUrl-001:ShopNo=XXXXXXXXX");
 
             return new OkObjectResult("這是永豐金流後台!");
         }
