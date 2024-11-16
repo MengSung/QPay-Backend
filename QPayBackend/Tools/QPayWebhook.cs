@@ -81,9 +81,9 @@ namespace QPayBackend.Tools
         {
             try
             {
-                m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "jesus");
+                //m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "jesus");
 
-                m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayBackendUrl-001:ShopNo="+ aBackendPostData.ShopNo);
+                //m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayBackendUrl-001:ShopNo="+ aBackendPostData.ShopNo);
 
                 QryOrderPay aQryOrderPay = new QryOrderPay();
 
@@ -91,7 +91,7 @@ namespace QPayBackend.Tools
                 // 取得訂單
                 aQryOrderPay = m_QPayProcessor.OrderPayQuery(aBackendPostData.ShopNo, aBackendPostData.PayToken);
 
-                m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayBackendUrl-002:ShopNo=" + aBackendPostData.ShopNo);
+                //m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayBackendUrl-002:ShopNo=" + aBackendPostData.ShopNo);
 
                 //aQryOrderPay = m_QPayProcessor.OrderPayQuery( aBackendPostData.PayToken );
                 //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "001.1-QPayAtmWebhook : " + aBackendPostData.ShopNo + "," + aBackendPostData.PayToken);

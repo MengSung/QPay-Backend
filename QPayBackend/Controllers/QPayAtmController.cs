@@ -46,9 +46,9 @@ namespace QPayBackend.Controllers
         [Route("QPayBackendUrl")]
         public JsonResult QPayBackendUrl([FromBody] BackendPostData aBackendPostData)
         {
-            m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "jesus");
+            //m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "jesus");
 
-            m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayAtmController:QPayBackendUrl-001:ShopNo=" + aBackendPostData.ShopNo);
+            //m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayAtmController:QPayBackendUrl-001:ShopNo=" + aBackendPostData.ShopNo);
 
             using (QPayAtmWebhook aQPayAtmWebhook = new QPayAtmWebhook())
             {
