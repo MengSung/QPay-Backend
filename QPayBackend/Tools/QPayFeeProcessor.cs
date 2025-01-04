@@ -93,7 +93,7 @@ namespace QPayBackend.Tools
                     {
                         // 正常的去應到該組織
                         m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", aQryOrderPay.TSResultContent.Param2);
-                        m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayBackendUrl-001");
+                        //m_ToolUtilityClass.TraceByLevel(TOTAL_LEVEL, LEVEL_1, "QPayBackendUrl-001");
                     }
 
                     #region 建立通知用的 LineMessagingClient
