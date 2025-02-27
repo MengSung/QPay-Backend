@@ -232,15 +232,15 @@ namespace QPayBackend.Tools
 
                                     #region 報名狀態
                                     if (
-                                            aQryOrderPay.TSResultContent.Param2 == "yhchurch" || 
-                                            aQryOrderPay.TSResultContent.Param2 == "imchurch" || 
-                                            aQryOrderPay.TSResultContent.Param2 == "thevictory" || 
-                                            aQryOrderPay.TSResultContent.Param2 == "dhchurch" || 
-                                            aQryOrderPay.TSResultContent.Param2 == "ymllc" || 
-                                            aQryOrderPay.TSResultContent.Param2 == "ymllcback" || 
-                                            aQryOrderPay.TSResultContent.Param2 == "apbolc" || 
-                                            aQryOrderPay.TSResultContent.Param2 == "apbolcback" || 
-                                            aQryOrderPay.TSResultContent.Param2 == "gned" || 
+                                            aQryOrderPay.TSResultContent.Param2 == "yhchurch" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "imchurch" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "thevictory" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "dhchurch" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "ymllc" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "ymllcback" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "apbolc" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "apbolcback" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "gned" ||
                                             aQryOrderPay.TSResultContent.Param2 == "gnedback" ||
                                             aQryOrderPay.TSResultContent.Param2 == "frenchhorn" ||
                                             aQryOrderPay.TSResultContent.Param2 == "frenchhornback" ||
@@ -340,6 +340,139 @@ namespace QPayBackend.Tools
                                 #endregion
                             }
                         }
+                        else if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("L"))
+                        {
+                            // 處理帳號訂單 : ATM轉帳/匯款
+                            //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008");
+                            if (this.m_ToolUtilityClass.GetOptionSetAttribute(ref aFeeEntity, "new_pay_status") == 100000000)
+                            {
+                                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.1");
+                                #region// 付款狀態 等於 "新建立"
+
+                                // 收費單付款日期
+                                this.m_ToolUtilityClass.SetEntityDateTimeAttribute(ref aFeeEntity, "new_pay_date", DateTime.Now.ToLocalTime());
+
+                                // 收費單總共實收金額
+                                Money aTotalPaid = new Money(Convert.ToUInt32(this.m_ToolUtilityClass.GetEntityMoneyAttribute(ref aFeeEntity, "new_fee_really_paid").Value + new Money((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).Value));
+                                this.m_ToolUtilityClass.SetEntityMoneyAttribute(ref aFeeEntity, "new_fee_really_paid", aTotalPaid);
+                                // 收費單實現阿拉伯數字到大寫中文的轉換，金額轉為大寫金額
+                                this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_big_chinese_number", MoneyToChinese((Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString()));
+                                // 收費單付款方式
+                                this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_way", 100000005); // 100000005 = LinePay
+                                // 收費單付款狀態
+                                this.m_ToolUtilityClass.SetOptionSetAttribute(ref aFeeEntity, "new_pay_status", 100000006); // 100000006 = LinePay已繳費
+                                // 收費單說明
+                                String aOriginalDescription = this.m_ToolUtilityClass.GetEntityStringAttribute(ref aFeeEntity, "new_description");
+                                this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_description", aOriginalDescription + Description);
+                                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.2");
+                                // 付款紀錄
+                                String aPaymentRecords =
+                                        this.m_ToolUtilityClass.GetEntityStringAttribute(aFeeEntity, "new_payment_records") +
+                                        DateTime.Now.ToString() +
+                                        ": BackendUrl => LinePay訂單編號= " + aQryOrderPay.TSResultContent.OrderNo +
+                                        "，金額:" + ((int)Convert.ToUInt32(aQryOrderPay.TSResultContent.Amount) / 100).ToString() +
+                                        Environment.NewLine;
+                                this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_payment_records", aPaymentRecords);
+
+                                //this.m_PushUtility.SendMessage(MENGSUNG_LINE_ID, "008.3");
+
+                                if (aQryOrderPay.TSResultContent.OrderNo.StartsWith("A"))
+                                {
+                                    // 已付款虛擬帳號訂單編號
+                                    this.m_ToolUtilityClass.SetEntityStringAttribute(ref aFeeEntity, "new_q_paid_order_atm_no", aQryOrderPay.TSResultContent.OrderNo);
+                                }
+
+                                // 更新收費單
+                                this.m_ToolUtilityClass.UpdateEntity(ref aFeeEntity);
+
+                                #region// 取得上課紀錄單，更新報名狀態
+                                Guid aStorLessonsId = this.m_ToolUtilityClass.GetEntityLookupAttribute(ref aFeeEntity, "new_stor_lessons_new_fee");
+                                if (aStorLessonsId != Guid.Empty)
+                                {
+                                    Entity aStorLessons = this.m_ToolUtilityClass.RetrieveEntity("new_stor_lessons", aStorLessonsId);
+
+                                    #region 報名狀態
+                                    if (
+                                            aQryOrderPay.TSResultContent.Param2 == "yhchurch" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "imchurch" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "thevictory" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "dhchurch" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "ymllc" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "ymllcback" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "apbolc" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "apbolcback" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "gned" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "gnedback" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "frenchhorn" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "frenchhornback" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "tpehoc" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "tpehocback" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "khhoc" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "khhocback" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "fbllc" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "fbllcback" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "nankanchurch" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "nankanchurchback"
+                                        )
+                                    {
+                                        // 有小組長審核的教會=>報名成功:永和禮拜堂 、 iM行動教會
+                                        this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000008);
+                                    }
+                                    else
+                                    {
+                                        // 不需要小組長審核的教會
+                                        this.m_ToolUtilityClass.SetOptionSetAttribute(ref aStorLessons, "new_enroll_status", 100000001);
+                                    }
+                                    #endregion
+
+                                    this.m_ToolUtilityClass.UpdateEntity(ref aStorLessons);
+                                }
+                                #endregion
+
+                                #region LINE 通知付款人
+                                // 取得收費單的課程Lookup是否有值
+                                Guid aDiscipleLessonsId = this.m_ToolUtilityClass.GetEntityLookupAttribute(ref aFeeEntity, "new_disciple_lessons_new_fee");
+
+                                if (aDiscipleLessonsId == Guid.Empty)
+                                {
+                                    // 收費單的課程Lookup沒有值
+                                    this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description);
+                                }
+                                else
+                                {
+                                    // 收費單的課程Lookup有值
+                                    // 取得該課程
+                                    Entity aDiscipleLessonsEntity = this.m_ToolUtilityClass.RetrieveEntity("new_disciple_lessons", aDiscipleLessonsId);
+
+                                    if (aDiscipleLessonsEntity != null)
+                                    {
+                                        // 有取得該課程
+
+                                        // 取得Line群組邀請網址
+                                        String LineGroupInviteAddress = this.m_ToolUtilityClass.GetEntityStringAttribute(aDiscipleLessonsEntity, "new_line_group_invite_address");
+
+                                        if (LineGroupInviteAddress == "")
+                                        {
+                                            // 沒有Line群組邀請網址
+                                            this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description);
+                                        }
+                                        else
+                                        {
+                                            // 有Line群組邀請網址
+                                            this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description + Environment.NewLine + "並且請點擊連結，加入Line群組" + Environment.NewLine + LineGroupInviteAddress);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // 沒有取得該課程
+                                        this.m_PushUtility.SendMessage(UserLineId, "ATM轉帳/匯款付款結果成功!" + Environment.NewLine + Description);
+                                    }
+                                }
+                                #endregion
+
+                                #endregion
+                            }
+                        }
                         else
                         {
                             // 處理帳號訂單 : ATM轉帳/匯款
@@ -408,9 +541,9 @@ namespace QPayBackend.Tools
                                             aQryOrderPay.TSResultContent.Param2 == "tpehoc" ||
                                             aQryOrderPay.TSResultContent.Param2 == "tpehocback" ||
                                             aQryOrderPay.TSResultContent.Param2 == "khhoc" ||
-                                            aQryOrderPay.TSResultContent.Param2 == "khhocback"||
+                                            aQryOrderPay.TSResultContent.Param2 == "khhocback" ||
                                             aQryOrderPay.TSResultContent.Param2 == "fbllc" ||
-                                            aQryOrderPay.TSResultContent.Param2 == "fbllcback"||
+                                            aQryOrderPay.TSResultContent.Param2 == "fbllcback" ||
                                             aQryOrderPay.TSResultContent.Param2 == "nankanchurch" ||
                                             aQryOrderPay.TSResultContent.Param2 == "nankanchurchback"
                                         )
