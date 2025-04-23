@@ -484,6 +484,12 @@ namespace QPayBackend.Tools
             //客製化
             switch (Organzition)
             {
+                case "sunnyvalech":
+                    // 聖谷行道會(雲端機房)
+                    return @"OMjL23DpFRDgphgN7JdzA7uCpv1wb4hXtsGh4FzxP8tHzeMyYOr/ry3BBqaRNJpVUhR6wPHLN4Wa4QiG5i3P5T/Y07swP5OjfCz9DKwTYC7T4mPb8x54pwtcqK1lIdgNm6skdZnu99fBsupEcbZLBAdB04t89/1O/w1cDnyilFU=";
+                case "sunnyvalechback":
+                    // 聖谷行道會(公司研發)
+                    return @"OMjL23DpFRDgphgN7JdzA7uCpv1wb4hXtsGh4FzxP8tHzeMyYOr/ry3BBqaRNJpVUhR6wPHLN4Wa4QiG5i3P5T/Y07swP5OjfCz9DKwTYC7T4mPb8x54pwtcqK1lIdgNm6skdZnu99fBsupEcbZLBAdB04t89/1O/w1cDnyilFU=";
                 case "tycanaan":
                     // 迦南長老教會(雲端機房)
                     return @"ZruImm1O8UprkbqAbxKlD/s1Y2gKPfN2lMgyGtC7LOyEgtufMIBoOzhDb998UiVcNHx+KKnrzXp4KUKYdfxWbBEjWhS9hbzuc4x/LDuGdeAbnrqi6o/UjUlOgXSZV1NzAw3hoSfwrNPN0fSJpEBZCAdB04t89/1O/w1cDnyilFU=";

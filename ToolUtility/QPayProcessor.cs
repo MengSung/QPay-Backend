@@ -219,58 +219,58 @@ namespace ToolUtilityNameSpace
             {
                 //客製化
                 switch (aShopNo)
-            {
-                case "NA0149_001":
-                    // 音訊教會 SandBox
-                    return ConfigurationManager.AppSettings["SPEECHMESSAGE_XKeyID"];
-                case "DA1626_001":
-                    // 永和禮拜堂"板橋民族分行"
-                    return ConfigurationManager.AppSettings["YHCHURCH_XKeyID"];
-                case "DA1626_003":
-                    // 永和禮拜堂"永和分行"
-                    return ConfigurationManager.AppSettings["YHCHURCH_XKeyID"];
-                case "DA2424_001":
-                    // iM行動教會
-                    return ConfigurationManager.AppSettings["IM_XKeyID"];
-                case "DA2659_001":
-                    // 台北得勝靈糧堂
-                    return ConfigurationManager.AppSettings["VICTORY_XKeyID"];
-                case "DA2890_001":
-                    // 忠孝路長老教會
-                    return ConfigurationManager.AppSettings["CHUNGHSIAO_XKeyID"];
-                case "DA3033_001":
-                    // 東湖禮拜堂
-                    return ConfigurationManager.AppSettings["DEFAULT_XKeyID"];
-                case "DA3190_001":
-                    // 楊梅靈糧堂
-                    return ConfigurationManager.AppSettings["YM_XKeyID"];
-                case "DA3189_001":
-                    // 以利亞之家
-                    return ConfigurationManager.AppSettings["ELIJAH_XKeyID"];
-                case "DA3412_001":
-                    // 安平靈糧堂
-                    return ConfigurationManager.AppSettings["APBOLC_XKeyID"];
-                case "DA3806_001":
-                    // 好消息協會
-                    return ConfigurationManager.AppSettings["GOODNEWS_XKeyID"];
-                case "DA3855_002":
-                    // 法國號靈糧堂
-                    return ConfigurationManager.AppSettings["FRENCH_XKeyID"];
-                case "DA4001_001":
-                    // 社團法人台灣基督教天母豐盛協會
-                    return ConfigurationManager.AppSettings["FBLLC_XKeyID"];
-                case "DA3009_001":
-                    // 神住611靈糧堂
-                    return ConfigurationManager.AppSettings["611_XKeyID"];
-                case "DA4195_001":
-                    // 南崁長老教會
-                    return ConfigurationManager.AppSettings["NANKAN_XKeyID"];
-                case "DA4272_001":
-                    // 迦南長老教會
-                    return ConfigurationManager.AppSettings["TYCANNAH_XKeyID"];
-                default:
-                    return ConfigurationManager.AppSettings["DEFAULT_XKeyID"];
-            }
+                {
+                    case "NA0149_001":
+                        // 音訊教會 SandBox
+                        return ConfigurationManager.AppSettings["SPEECHMESSAGE_XKeyID"];
+                    case "DA1626_001":
+                        // 永和禮拜堂"板橋民族分行"
+                        return ConfigurationManager.AppSettings["YHCHURCH_XKeyID"];
+                    case "DA1626_003":
+                        // 永和禮拜堂"永和分行"
+                        return ConfigurationManager.AppSettings["YHCHURCH_XKeyID"];
+                    case "DA2424_001":
+                        // iM行動教會
+                        return ConfigurationManager.AppSettings["IM_XKeyID"];
+                    case "DA2659_001":
+                        // 台北得勝靈糧堂
+                        return ConfigurationManager.AppSettings["VICTORY_XKeyID"];
+                    case "DA2890_001":
+                        // 忠孝路長老教會
+                        return ConfigurationManager.AppSettings["CHUNGHSIAO_XKeyID"];
+                    case "DA3033_001":
+                        // 東湖禮拜堂
+                        return ConfigurationManager.AppSettings["DEFAULT_XKeyID"];
+                    case "DA3190_001":
+                        // 楊梅靈糧堂
+                        return ConfigurationManager.AppSettings["YM_XKeyID"];
+                    case "DA3189_001":
+                        // 以利亞之家
+                        return ConfigurationManager.AppSettings["ELIJAH_XKeyID"];
+                    case "DA3412_001":
+                        // 安平靈糧堂
+                        return ConfigurationManager.AppSettings["APBOLC_XKeyID"];
+                    case "DA3806_001":
+                        // 好消息協會
+                        return ConfigurationManager.AppSettings["GOODNEWS_XKeyID"];
+                    case "DA3855_002":
+                        // 法國號靈糧堂
+                        return ConfigurationManager.AppSettings["FRENCH_XKeyID"];
+                    case "DA4001_001":
+                        // 社團法人台灣基督教天母豐盛協會
+                        return ConfigurationManager.AppSettings["FBLLC_XKeyID"];
+                    case "DA3009_001":
+                        // 神住611靈糧堂
+                        return ConfigurationManager.AppSettings["611_XKeyID"];
+                    case "DA4195_001":
+                        // 南崁長老教會
+                        return ConfigurationManager.AppSettings["NANKAN_XKeyID"];
+                    case "DA4272_001":
+                        // 迦南長老教會
+                        return ConfigurationManager.AppSettings["TYCANNAH_XKeyID"];
+                    default:
+                        return ConfigurationManager.AppSettings["DEFAULT_XKeyID"];
+                }
             }
             catch (System.Exception e)
             {

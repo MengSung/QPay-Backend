@@ -256,7 +256,9 @@ namespace QPayBackend.Tools
                                             aQryOrderPay.TSResultContent.Param2 == "nankanchurchback" ||
                                             aQryOrderPay.TSResultContent.Param2 == "shekinah611back" ||
                                             aQryOrderPay.TSResultContent.Param2 == "tycanaan" ||
-                                            aQryOrderPay.TSResultContent.Param2 == "tycanaanback"
+                                            aQryOrderPay.TSResultContent.Param2 == "tycanaanback"||
+                                            aQryOrderPay.TSResultContent.Param2 == "sunnyvalech" ||
+                                            aQryOrderPay.TSResultContent.Param2 == "sunnyvalechback"
                                      )
                                     {
                                         // 有小組長審核的教會=>報名成功:永和禮拜堂
@@ -643,6 +645,12 @@ namespace QPayBackend.Tools
             //客製化
             switch (Organzition)
             {
+                case "sunnyvalech":
+                    // 聖谷行道會(雲端機房)
+                    return @"OMjL23DpFRDgphgN7JdzA7uCpv1wb4hXtsGh4FzxP8tHzeMyYOr/ry3BBqaRNJpVUhR6wPHLN4Wa4QiG5i3P5T/Y07swP5OjfCz9DKwTYC7T4mPb8x54pwtcqK1lIdgNm6skdZnu99fBsupEcbZLBAdB04t89/1O/w1cDnyilFU=";
+                case "sunnyvalechback":
+                    // 聖谷行道會(公司研發)
+                    return @"OMjL23DpFRDgphgN7JdzA7uCpv1wb4hXtsGh4FzxP8tHzeMyYOr/ry3BBqaRNJpVUhR6wPHLN4Wa4QiG5i3P5T/Y07swP5OjfCz9DKwTYC7T4mPb8x54pwtcqK1lIdgNm6skdZnu99fBsupEcbZLBAdB04t89/1O/w1cDnyilFU=";
                 case "tycanaan":
                     // 迦南長老教會(雲端機房)
                     return @"ZruImm1O8UprkbqAbxKlD/s1Y2gKPfN2lMgyGtC7LOyEgtufMIBoOzhDb998UiVcNHx+KKnrzXp4KUKYdfxWbBEjWhS9hbzuc4x/LDuGdeAbnrqi6o/UjUlOgXSZV1NzAw3hoSfwrNPN0fSJpEBZCAdB04t89/1O/w1cDnyilFU=";
