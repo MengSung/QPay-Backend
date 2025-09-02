@@ -40,7 +40,6 @@ namespace ChurchReport.WebServiceConnector
         #region 初始化
         public MyPayProcessor()
         {
-            m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", "ymllc");
             // 讀取 appsettings.json 配置
             IConfigurationBuilder builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
