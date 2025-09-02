@@ -53,45 +53,70 @@ namespace ChurchReport.WebServiceConnector
         #region 高鉅金流 PayPage 回傳處理
         /// <summary>
         /// 驗證高鉅金流回傳的 Hash 簽名
+        /// 根據高鉅金流官方文檔規格，使用 SHA256 演算法驗證交易回傳資料的完整性與真實性
+        /// 簽名計算規則：KEY + transaction_id + order_id + state + IV
         /// </summary>
-        /// <param name="returnModel">回傳資料</param>
-        /// <returns>驗證結果</returns>
+        /// <param name="returnModel">高鉅金流回傳的交易資料模型，包含交易ID、訂單ID、狀態等資訊</param>
+        /// <returns>
+        /// true: Hash 驗證成功，回傳資料未被竄改
+        /// false: Hash 驗證失敗，可能原因包括：
+        /// - Key 或 IV 設定為空值
+        /// - 回傳資料被竄改
+        /// - 簽名計算過程發生異常
+        /// </returns>
+        /// <remarks>
+        /// 安全性考量：
+        /// 1. 使用 SHA256 雜湊演算法確保資料完整性
+        /// 2. 採用大小寫不敏感比較避免格式差異造成驗證失敗
+        /// 3. 所有異常情況均回傳 false 確保安全性優先
+        /// 
+        /// 設定檔需求：
+        /// - MyPay:Key: 高鉅金流提供的加密金鑰
+        /// - MyPay:IV: 高鉅金流提供的初始化向量
+        /// </remarks>
         public bool VerifyMyPayHash(MyPayReturnModel returnModel)
         {
             try
             {
+                // 初始化工具類別，使用回傳資料中的 echo_1 作為組織標識
                 m_ToolUtilityClass = new ToolUtilityClass("DYNAMICS365", returnModel.echo_1);
 
+                // 從設定檔讀取高鉅金流的加密金鑰和初始化向量
                 string key = m_Configuration["MyPay:Key"];
                 string iv = m_Configuration["MyPay:IV"];
 
+                // 驗證必要的加密參數是否存在
                 if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(iv))
                 {
                     String ErrorString = $"ERROR: MyPay Key 或 IV 設定為空 - {DateTime.Now}";
                     return false;
                 }
 
-                // 根據高鉅金流文檔的簽名計算規則
-                // 簽名組合：KEY + transaction_id + order_id + state + IV
+                // 根據高鉅金流文檔的簽名計算規則組合原始資料
+                // 簽名組合順序：KEY + transaction_id + order_id + state + IV
                 string rawData = $"{key}{returnModel.transaction_id}{returnModel.order_id}{returnModel.state}{iv}";
 
-                // 使用 SHA256 計算 Hash
+                // 使用 SHA256 演算法計算雜湊值
                 using (SHA256 sha256 = SHA256.Create())
                 {
+                    // 將原始資料轉換為 UTF-8 位元組陣列並計算雜湊
                     byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawData));
                     StringBuilder hashBuilder = new StringBuilder();
 
+                    // 將雜湊位元組轉換為十六進制字串（小寫）
                     foreach (byte b in bytes)
                     {
                         hashBuilder.Append(b.ToString("x2"));
                     }
 
+                    // 轉換為大寫並與回傳的雜湊值進行不區分大小寫比較
                     string calculatedHash = hashBuilder.ToString().ToUpper();
                     return calculatedHash.Equals(returnModel.hash, StringComparison.OrdinalIgnoreCase);
                 }
             }
             catch (Exception ex)
             {
+                // 記錄異常資訊並回傳驗證失敗（安全性優先原則）
                 String ErrorString = $"ERROR: VerifyMyPayHash - {DateTime.Now} - {ex}";
                 return false;
             }
