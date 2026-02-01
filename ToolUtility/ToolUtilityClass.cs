@@ -109,7 +109,6 @@ namespace ToolUtilityNameSpace
         private const String TRACE_DIRECTOR = @"D:\除錯追蹤\" + "QPBACKEND_TRACE.TXT";
         //private const String TRACE_DIRECTOR = @"C:\除錯追蹤\" + "TRACE.TXT";
         #endregion
-
         #region 建構式
         public ToolUtilityClass( )
         {
@@ -1493,6 +1492,36 @@ namespace ToolUtilityNameSpace
             }
         }
 
+        /// <summary>
+        /// 根據欄位值檢索實體
+        /// ? Phase 3.1: 優化 - 添加 TopCount 限制
+        /// </summary>
+        public Entity RetrieveEntityByField(string entityName, string fieldName, string fieldValue)
+        {
+            // ? 優化：添加 TopCount，只取第一筆
+            var query = new QueryByAttribute(entityName)
+            {
+                ColumnSet = new ColumnSet(true),
+                TopCount = 1  // ? 只需要第一筆
+            };
+
+            query.Attributes.AddRange(fieldName, "statecode");
+            query.Values.AddRange(fieldValue, 0);
+
+            EntityCollection collection;
+            if (CRM_TYPE == "DYNAMICS365")
+            {
+                collection = this.m_OrganizationService.RetrieveMultiple(query);
+                return (collection != null && collection.Entities.Count > 0) ? collection.Entities[0] : null;
+
+            }
+            else
+            {
+                collection = this.m_Crm2011OrganizationService.RetrieveMultiple(query);
+                return (collection != null && collection.Entities.Count > 0) ? collection.Entities[0] : null;
+
+            }
+        }
         #endregion
         #region 取得組織
 
