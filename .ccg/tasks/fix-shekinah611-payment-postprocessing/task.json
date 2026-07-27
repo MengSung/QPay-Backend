@@ -1,0 +1,12 @@
+{
+  "id": "fix-shekinah611-payment-postprocessing",
+  "title": "修復 shekinah611 與 nankanchurch 付款後未更新收費單且未發送 LINE 通知",
+  "status": "in_progress",
+  "complexity": "M",
+  "risk": "high",
+  "domain": "backend",
+  "currentPhase": "analysis",
+  "nextAction": "核對雲端 QPayBackend.exe 同目錄的 QPayBackend.exe.config；若仍為舊 XKey，重建並部署正確 runtime config 後回收 IIS 程序",
+  "createdAt": "2026-07-27T03:21:33.9634354Z",
+  "branch": "Add-Trace"
+}
