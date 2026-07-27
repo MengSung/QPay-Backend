@@ -2,10 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>net471</TargetFramework>
+    <AppConfig>$(MSBuildProjectDirectory)\app.config</AppConfig>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="app.config">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -19,5 +27,11 @@
     <ProjectReference Include="..\Line.Messaging\Line.Messaging.csproj" />
     <ProjectReference Include="..\ToolUtility\ToolUtility.csproj" />
   </ItemGroup>
+
+  <Target Name="ValidatePublishedConfiguration" AfterTargets="Publish">
+    <Exec
+      WorkingDirectory="$(MSBuildProjectDirectory)"
+      Command="powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\Verify-PublishedConfig.ps1&quot; -SourceConfig &quot;$(AppConfig)&quot; -RuntimeConfig &quot;$(PublishDir)$(TargetFileName).config&quot; -ForbiddenConfig &quot;$(PublishDir)app.config&quot;" />
+  </Target>
 
 </Project>
