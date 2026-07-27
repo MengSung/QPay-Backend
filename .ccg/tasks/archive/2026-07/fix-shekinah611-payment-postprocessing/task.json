@@ -1,0 +1,14 @@
+{
+  "id": "fix-shekinah611-payment-postprocessing",
+  "title": "修正 shekinah611 與 nankanchurch 付款後未更新收費單及未發送 LINE",
+  "status": "completed",
+  "complexity": "M",
+  "risk": "high",
+  "domain": "backend",
+  "currentPhase": "completed",
+  "nextAction": "部署已驗證的 QPayBackend Release ZIP，並回收 IIS 應用程式集區",
+  "createdAt": "2026-07-27T03:21:33.9634354Z",
+  "completedAt": "2026-07-27T04:52:20.5409346Z",
+  "verifiedArtifact": "artifacts/QPayBackend-Release-20260727-124806-2ac45b30.zip",
+  "branch": "1.0.1.Remove.App.config"
+}

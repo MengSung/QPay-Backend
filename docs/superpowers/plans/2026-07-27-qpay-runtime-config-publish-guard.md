@@ -17,7 +17,7 @@
 - Create: `QPayBackend/Tests/Verify-PublishedConfig.Tests.ps1`
 - Create: `QPayBackend/Verify-PublishedConfig.ps1`
 
-- [ ] **Step 1: Write the failing verifier test harness**
+- [x] **Step 1: Write the failing verifier test harness**
 
 Create a dependency-free PowerShell test harness that writes temporary source/runtime XML fixtures containing sentinel values, invokes the real verifier in a child `powershell.exe`, and checks exit code plus combined output.
 
@@ -35,7 +35,7 @@ Invoke-Test 'missing appSettings section fails clearly' { Assert-ExitCode 1; Ass
 
 All fixtures use fake sentinel values; no repository XKey is read or copied into test output.
 
-- [ ] **Step 2: Run the verifier tests and verify RED**
+- [x] **Step 2: Run the verifier tests and verify RED**
 
 Run:
 
@@ -45,7 +45,7 @@ powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File 
 
 Expected: nonzero exit with `Verifier script is missing`, proving the required implementation does not yet exist.
 
-- [ ] **Step 3: Implement the minimal verifier**
+- [x] **Step 3: Implement the minimal verifier**
 
 `Verify-PublishedConfig.ps1` must declare:
 
@@ -74,7 +74,7 @@ Set-StrictMode -Version 2.0
 
 Required fixed categories are `missing-source-config`, `missing-runtime-config`, `invalid-source-xml`, `invalid-runtime-xml`, `duplicate-key`, `missing-runtime-key`, `unexpected-runtime-key`, `value-mismatch`, `unsafe-empty-value`, `unsafe-outer-whitespace`, `forbidden-published-file`, and `verifier-internal-error`.
 
-- [ ] **Step 4: Run verifier tests and verify GREEN**
+- [x] **Step 4: Run verifier tests and verify GREEN**
 
 Run the command from Step 2.
 
@@ -87,7 +87,7 @@ Expected: `7 passed, 0 failed`, exit code 0, and no sentinel setting value in ou
 - Create: `QPayBackend/Tests/Publish-Configuration.Tests.ps1`
 - Modify: `QPayBackend/QPayBackend.csproj`
 
-- [ ] **Step 1: Write the failing publish integration test**
+- [x] **Step 1: Write the failing publish integration test**
 
 The script publishes to a GUID-named directory beneath the system temporary directory and asserts:
 
@@ -99,7 +99,9 @@ Assert-False (Test-Path (Join-Path $publishDirectory 'app.config'))
 
 The `finally` block may recursively delete only the exact GUID directory it created beneath `[IO.Path]::GetTempPath()`.
 
-- [ ] **Step 2: Run publish integration test and verify RED**
+The same script must import a temporary `BeforeTargets="ValidatePublishedConfiguration"` target that changes only the generated runtime fixture to a fake stale sentinel. It must then prove the complete `dotnet publish` command exits nonzero, reports only `value-mismatch key=611_XKeyID`, does not disclose the sentinel, and does not print the validation success marker.
+
+- [x] **Step 2: Run publish integration test and verify RED**
 
 Run:
 
@@ -109,7 +111,7 @@ powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File 
 
 Expected: failure because current Web SDK publication includes `app.config`.
 
-- [ ] **Step 3: Wire source configuration and validation into MSBuild**
+- [x] **Step 3: Wire source configuration and validation into MSBuild**
 
 Add to the main property group in `QPayBackend.csproj`:
 
@@ -134,11 +136,11 @@ Add:
 </Target>
 ```
 
-- [ ] **Step 4: Run publish integration test and verify GREEN**
+- [x] **Step 4: Run publish integration test and verify GREEN**
 
 Run the command from Step 2.
 
-Expected: publish exits 0, `QPayBackend.exe.config` exists, `app.config` is absent, and the verifier prints a success summary.
+Expected: the matching publish exits 0 with `QPayBackend.exe.config` present and `app.config` absent; the injected stale publish exits nonzero without disclosing either real or sentinel values.
 
 ### Task 3: Replace the stale reusable output workflow
 
@@ -148,7 +150,7 @@ Expected: publish exits 0, `QPayBackend.exe.config` exists, `app.config` is abse
 - Create: `QPayBackend/Publish-QPayBackend.ps1`
 - Modify: `QPayBackend/DotNetPublish-Release.bat`
 
-- [ ] **Step 1: Write the failing publisher integration test**
+- [x] **Step 1: Write the failing publisher integration test**
 
 The test invokes the official publisher with a GUID-named temporary artifact root and asserts:
 
@@ -163,7 +165,7 @@ Assert-True (Test-Path (Join-Path $publishedDirectory 'QPayBackend.exe.config'))
 Assert-True (Test-Path (Join-Path $publishedDirectory 'deployment-manifest.json'))
 ```
 
-- [ ] **Step 2: Run publisher test and verify RED**
+- [x] **Step 2: Run publisher test and verify RED**
 
 Run:
 
@@ -173,7 +175,7 @@ powershell.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File 
 
 Expected: nonzero exit because `Publish-QPayBackend.ps1` does not yet exist.
 
-- [ ] **Step 3: Implement the clean publisher**
+- [x] **Step 3: Implement the clean publisher**
 
 `Publish-QPayBackend.ps1` parameters:
 
@@ -202,7 +204,7 @@ The implementation must:
 # On failure, print only a fixed stage name and exit nonzero.
 ```
 
-- [ ] **Step 4: Replace the Release batch entry point**
+- [x] **Step 4: Replace the Release batch entry point**
 
 Use a thin wrapper that preserves the PowerShell exit code:
 
@@ -217,7 +219,7 @@ pause
 exit /b %QPAY_PUBLISH_EXIT%
 ```
 
-- [ ] **Step 5: Run publisher test and verify GREEN**
+- [x] **Step 5: Run publisher test and verify GREEN**
 
 Run the command from Step 2.
 
@@ -230,7 +232,7 @@ Expected: one fresh deployment directory, one ZIP, one checksum file, valid mani
 - Modify: `.ccg/tasks/fix-shekinah611-payment-postprocessing/task.json`
 - Create: `.ccg/tasks/fix-shekinah611-payment-postprocessing/review.md`
 
-- [ ] **Step 1: Run all PowerShell tests**
+- [x] **Step 1: Run all PowerShell tests**
 
 ```powershell
 Get-ChildItem .\QPayBackend\Tests\*.Tests.ps1 | ForEach-Object {
@@ -241,7 +243,7 @@ Get-ChildItem .\QPayBackend\Tests\*.Tests.ps1 | ForEach-Object {
 
 Expected: every script exits 0.
 
-- [ ] **Step 2: Run full solution build**
+- [x] **Step 2: Run full solution build**
 
 ```powershell
 & 'C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe' .\QPayBackend.sln /m /t:Build /p:Configuration=Release /v:minimal
@@ -249,7 +251,7 @@ Expected: every script exits 0.
 
 Expected: exit code 0. Existing warnings must be recorded but no new compiler error is allowed.
 
-- [ ] **Step 3: Inspect scope and secret safety**
+- [x] **Step 3: Inspect scope and secret safety**
 
 ```powershell
 git diff --check
@@ -260,10 +262,10 @@ rg -n "MyPay" QPayBackend\Verify-PublishedConfig.ps1 QPayBackend\Publish-QPayBac
 
 Expected: only publish guard, tests, docs, and CCG files changed; no MyPay production file changed; no real XKey appears in new test or documentation files.
 
-- [ ] **Step 4: Perform review and fix Critical findings**
+- [x] **Step 4: Perform review and fix Critical findings**
 
 Attempt the required Gemini and Claude review in parallel with a bounded wait. If external review times out, stop it under the user's explicit authorization and perform a local plus `ccg-review` review. Record Critical/Warning/Info findings and resolutions in `review.md`.
 
-- [ ] **Step 5: Complete and archive the CCG task**
+- [x] **Step 5: Complete and archive the CCG task**
 
 Set task status/phase to completed, record the verified commands, move the task to `.ccg/tasks/archive/2026-07/`, stage only intended files, and commit the implementation plus required task archive.
