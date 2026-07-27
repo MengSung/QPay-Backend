@@ -5,8 +5,8 @@
   "complexity": "M",
   "risk": "high",
   "domain": "backend",
-  "currentPhase": "analysis",
-  "nextAction": "核對雲端 QPayBackend.exe 同目錄的 QPayBackend.exe.config；若仍為舊 XKey，重建並部署正確 runtime config 後回收 IIS 程序",
+  "currentPhase": "planning",
+  "nextAction": "實作乾淨發布、自動比對 appSettings、驗證失敗中止，以及從部署包移除 app.config",
   "createdAt": "2026-07-27T03:21:33.9634354Z",
-  "branch": "Add-Trace"
+  "branch": "1.0.1.Remove.App.config"
 }

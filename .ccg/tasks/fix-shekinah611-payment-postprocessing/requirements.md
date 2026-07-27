@@ -26,4 +26,13 @@
 - 使用者提供的雲端 `app.config` 與目前工作樹 `QPayBackend/app.config` 完全相同；`611_XKeyID`、`NANKAN_XKeyID` 與 `SINOPAC_SITE` 均存在、無前後空白或控制字元。
 - IIS 的 `web.config` 啟動 `QPayBackend.exe`，且程式使用 `ConfigurationManager.AppSettings`、沒有設定檔覆寫，因此執行階段讀取的是同目錄 `QPayBackend.exe.config`，不是 `app.config`。
 - 本機既有 `bin/Output/QPayBackend.exe.config` 與建置前的 Debug runtime config 仍是舊 XKey；重新建置後，Debug runtime config 立即同步為新 XKey。
-- 目前最強根因假說為：雲端只更新 `app.config`，但實際 runtime `QPayBackend.exe.config` 仍保留舊 XKey，或更新後尚未回收 IIS 程序。這會讓兩租戶在共同的永豐 Nonce／訂單查詢階段中斷，因此單筆與定期定額都不會進入 CRM 更新及 LINE 通知。
+- 根因已由雲端檔案確認：只更新了 `app.config`，實際 runtime `QPayBackend.exe.config` 仍保留舊 XKey。這讓兩租戶在共同的永豐 Nonce／訂單查詢階段中斷，因此單筆與定期定額都沒有進入 CRM 更新及 LINE 通知。
+
+## 防止再次發生
+
+- 每次發布必須使用全新輸出目錄，不能沿用 `bin/Output` 的舊檔。
+- 發布後必須自動精確比對來源 `app.config` 與 runtime `QPayBackend.exe.config` 的 `appSettings`。
+- runtime config 缺漏、鍵值不一致、必要 XKey／site 含外層空白時，發布必須以非零狀態中止。
+- 驗證訊息只能列出設定鍵名稱與錯誤類型，不得輸出任何 XKey、Token、密碼或完整 XML。
+- 部署包不得包含容易被誤認為生效設定的 `app.config`，只保留 `QPayBackend.exe.config`。
+- 本次不修改 MyPay 或既有付款、CRM、LINE 商業邏輯。
