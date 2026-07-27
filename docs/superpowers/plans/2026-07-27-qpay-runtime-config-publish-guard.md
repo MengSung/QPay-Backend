@@ -21,7 +21,7 @@
 
 Create a dependency-free PowerShell test harness that writes temporary source/runtime XML fixtures containing sentinel values, invokes the real verifier in a child `powershell.exe`, and checks exit code plus combined output.
 
-The harness must contain these six cases:
+The harness must contain these seven cases:
 
 ```powershell
 Invoke-Test 'matching settings succeed' { Assert-ExitCode 0 }
@@ -30,6 +30,7 @@ Invoke-Test 'missing runtime key fails' { Assert-ExitCode 1; Assert-Contains 'NA
 Invoke-Test 'outer whitespace fails' { Assert-ExitCode 1; Assert-Contains 'unsafe-outer-whitespace' }
 Invoke-Test 'missing runtime config fails' { Assert-ExitCode 1; Assert-Contains 'missing-runtime-config' }
 Invoke-Test 'published app.config fails' { Assert-ExitCode 1; Assert-Contains 'forbidden-published-file' }
+Invoke-Test 'missing appSettings section fails clearly' { Assert-ExitCode 1; Assert-Contains 'missing-appsettings'; Assert-NotContains 'verifier-internal-error' }
 ```
 
 All fixtures use fake sentinel values; no repository XKey is read or copied into test output.
@@ -77,7 +78,7 @@ Required fixed categories are `missing-source-config`, `missing-runtime-config`,
 
 Run the command from Step 2.
 
-Expected: `6 passed, 0 failed`, exit code 0, and no sentinel setting value in output.
+Expected: `7 passed, 0 failed`, exit code 0, and no sentinel setting value in output.
 
 ### Task 2: Make every project publish enforce the guard
 
@@ -195,6 +196,8 @@ The implementation must:
 # Confirm runtime config exists and source app.config is absent.
 # Write deployment-manifest.json containing application, configuration,
 # createdAtUtc, runtimeConfig filename, and runtimeConfigSha256 only.
+# Use System.IO.Compression.ZipFile.CreateFromDirectory so literal paths that
+# contain wildcard characters such as [ and ] are safe.
 # Compress the directory into a sibling ZIP and write <zip>.sha256.
 # On failure, print only a fixed stage name and exit nonzero.
 ```

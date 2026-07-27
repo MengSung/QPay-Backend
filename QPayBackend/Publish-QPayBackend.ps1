@@ -11,6 +11,10 @@ $ErrorActionPreference = 'Stop'
 $stage = 'initialize'
 $publishDirectory = $null
 $resolvedArtifactsRoot = $null
+$zipPath = $null
+$checksumPath = $null
+$temporaryZipPath = $null
+$temporaryChecksumPath = $null
 
 function Test-PathsEqual {
     param([string]$Left, [string]$Right)
@@ -21,18 +25,43 @@ function Test-PathsEqual {
         [StringComparison]::OrdinalIgnoreCase)
 }
 
-function Remove-PartialPublication {
-    if ([string]::IsNullOrEmpty($publishDirectory) -or
+function Remove-SafePublicationPath {
+    param(
+        [string]$Path,
+        [switch]$Recurse
+    )
+
+    if ([string]::IsNullOrEmpty($Path) -or
         [string]::IsNullOrEmpty($resolvedArtifactsRoot) -or
-        -not (Test-Path -LiteralPath $publishDirectory)) {
+        -not (Test-Path -LiteralPath $Path)) {
         return
     }
 
-    $resolvedPublishDirectory = [IO.Path]::GetFullPath($publishDirectory)
-    $rootPrefix = $resolvedArtifactsRoot.TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
-    if ($resolvedPublishDirectory.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase)) {
-        Remove-Item -LiteralPath $resolvedPublishDirectory -Recurse -Force
+    try {
+        $resolvedPath = [IO.Path]::GetFullPath($Path)
+        $rootPrefix = $resolvedArtifactsRoot.TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+        if (-not $resolvedPath.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase)) {
+            return
+        }
+
+        if ($Recurse) {
+            Remove-Item -LiteralPath $resolvedPath -Recurse -Force -ErrorAction SilentlyContinue
+        }
+        else {
+            Remove-Item -LiteralPath $resolvedPath -Force -ErrorAction SilentlyContinue
+        }
     }
+    catch {
+        return
+    }
+}
+
+function Remove-PartialPublication {
+    Remove-SafePublicationPath -Path $publishDirectory -Recurse
+    Remove-SafePublicationPath -Path $temporaryZipPath
+    Remove-SafePublicationPath -Path $temporaryChecksumPath
+    Remove-SafePublicationPath -Path $checksumPath
+    Remove-SafePublicationPath -Path $zipPath
 }
 
 try {
@@ -100,16 +129,20 @@ try {
 
     $stage = 'create-archive'
     $zipPath = $publishDirectory + '.zip'
+    $checksumPath = $zipPath + '.sha256'
+    $temporaryZipPath = $zipPath + '.partial'
+    $temporaryChecksumPath = $checksumPath + '.partial'
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     [IO.Compression.ZipFile]::CreateFromDirectory(
         $publishDirectory,
-        $zipPath,
+        $temporaryZipPath,
         [IO.Compression.CompressionLevel]::Optimal,
         $false)
-    $zipHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $zipPath).Hash
-    $checksumPath = $zipPath + '.sha256'
+    $zipHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $temporaryZipPath).Hash
     $checksumText = '{0}  {1}{2}' -f $zipHash, [IO.Path]::GetFileName($zipPath), [Environment]::NewLine
-    [IO.File]::WriteAllText($checksumPath, $checksumText, (New-Object Text.UTF8Encoding($false)))
+    [IO.File]::WriteAllText($temporaryChecksumPath, $checksumText, (New-Object Text.UTF8Encoding($false)))
+    Move-Item -LiteralPath $temporaryChecksumPath -Destination $checksumPath
+    Move-Item -LiteralPath $temporaryZipPath -Destination $zipPath
 
     Write-Host '[QPayPublish] publication-succeeded'
     Write-Host ('[QPayPublish] deployment-directory={0}' -f $publishDirectory)
@@ -118,7 +151,11 @@ try {
     exit 0
 }
 catch {
-    Remove-PartialPublication
+    try {
+        Remove-PartialPublication
+    }
+    catch {
+    }
     [Console]::Error.WriteLine(('[QPayPublish] publication-failed stage={0}' -f $stage))
     exit 1
 }
