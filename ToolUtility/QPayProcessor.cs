@@ -207,6 +207,15 @@ namespace ToolUtilityNameSpace
                         B21 = "B4BB50A285634433";
                         B22 = "5358D9405DFA42EC";
                         return A21 + "," + A22 + "," + B21 + "," + B22;
+                    case "DA4682_003":
+                        // 聖谷行道會
+                        //QPayToolkit._site = "https://funbiz.sinopac.com/QPay.WebAPI/api/";
+                        QPayToolkit._site = ConfigurationManager.AppSettings["SINOPAC_SITE"];
+                        A21 = "935F417E2E60435A";
+                        A22 = "EA9D595CBDD4434A";
+                        B21 = "3E40269F8FD84653";
+                        B22 = "4D958ABB74F64D63";
+                        return A21 + "," + A22 + "," + B21 + "," + B22;
                     default:
                         //QPayToolkit._site = "https://sandbox.sinopac.com/QPay.WebAPI/api/";
                         QPayToolkit._site = ConfigurationManager.AppSettings["SANDBOX_SITE"];
@@ -280,6 +289,9 @@ namespace ToolUtilityNameSpace
                     case "DA4272_002":
                         // 迦南長老教會
                         return ConfigurationManager.AppSettings["TYCANNAH_XKeyID"];
+                    case "DA4682_003":
+                        // 聖谷行道會
+                        return ConfigurationManager.AppSettings["SUNNY_XKeyID"];
                     default:
                         return ConfigurationManager.AppSettings["DEFAULT_XKeyID"];
                 }
